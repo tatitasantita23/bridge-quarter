@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bridge Quarter — Q3 Lock-In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --terra:#B5542D; --terra-dark:#8f3f1f; --cream:#FBF3E7; --sand:#F2E4D0;
+    --ink:#241a12; --grey:#7a6a5c; --green:#4c7a4c; --card:#fffdf9;
+    --shadow:0 2px 12px rgba(36,26,18,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);line-height:1.55}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 18px 90px}
+  h1,h2,h3{font-family:'Fraunces',serif}
+
+  header{background:linear-gradient(160deg,var(--terra) 0%,var(--terra-dark) 100%);color:var(--cream);padding:40px 20px 26px;text-align:center}
+  header .kicker{text-transform:uppercase;letter-spacing:.25em;font-size:11px;font-weight:600;opacity:.85}
+  header h1{font-size:clamp(32px,6vw,54px);font-weight:900;margin:6px 0 4px}
+  header .sub{font-style:italic;font-family:'Fraunces',serif;font-size:15px;opacity:.9}
+  .counters{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+  .counter{background:rgba(251,243,231,.12);border:1px solid rgba(251,243,231,.3);border-radius:12px;padding:10px 16px;min-width:118px}
+  .counter b{display:block;font-size:26px;font-family:'Fraunces',serif;font-weight:900;line-height:1.1}
+  .counter span{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;opacity:.85}
+
+  nav{position:sticky;top:0;z-index:50;background:var(--terra-dark);display:flex;justify-content:center;gap:2px;padding:0 8px;overflow-x:auto}
+  nav button{background:transparent;color:var(--cream);border:none;border-radius:0;padding:13px 18px;font-weight:600;font-size:14px;cursor:pointer;opacity:.75;border-bottom:3px solid transparent;white-space:nowrap}
+  nav button.active{opacity:1;border-bottom-color:var(--cream)}
+  nav button:hover{opacity:1;background:transparent}
+
+  section.tab{display:none;margin-top:34px}
+  section.tab.active{display:block}
+  h2{font-size:26px;font-weight:900;color:var(--terra-dark);margin-bottom:4px}
+  .lede{color:var(--grey);margin-bottom:18px;max-width:720px;font-size:14.5px}
+
+  .goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+  .goal,.panel{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:20px}
+  .goal{border-top:5px solid var(--terra);display:flex;flex-direction:column;gap:11px}
+  .goal h3{font-size:18px;font-weight:600}
+  .goal .num{font-family:'Fraunces',serif;font-weight:900;font-size:12.5px;color:var(--terra);letter-spacing:.15em}
+  .goal small,.panel small{color:var(--grey)}
+  .bar{background:var(--sand);border-radius:99px;height:11px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--terra);border-radius:99px;transition:width .4s}
+  .big{font-family:'Fraunces',serif;font-size:30px;font-weight:900;line-height:1}
+  .big small{font-size:13px;font-family:'Inter';font-weight:500}
+  select,input,textarea{font:inherit;padding:8px 10px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;width:100%}
+  textarea{min-height:64px;resize:vertical}
+  label.f{display:block;font-size:12.5px;font-weight:600;color:var(--grey);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.06em}
+  button{font:inherit;font-weight:600;background:var(--terra);color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer}
+  button:hover{background:var(--terra-dark)}
+  button.ghost{background:transparent;color:var(--grey);border:1.5px solid var(--sand);font-weight:500;font-size:13px}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .pillrow{display:flex;gap:8px;flex-wrap:wrap}
+  .pill{border:1.5px solid var(--sand);border-radius:99px;padding:7px 14px;font-size:13.5px;cursor:pointer;background:#fff;user-select:none}
+  .pill.on{background:var(--terra);border-color:var(--terra);color:#fff}
+  .check{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--sand);cursor:pointer}
+  .check:last-child{border-bottom:none}
+  .check input{margin-top:4px;accent-color:var(--terra);width:16px;height:16px;flex:none}
+  .check .done{text-decoration:line-through;color:var(--grey)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:780px){.cols{grid-template-columns:1fr}}
+  table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);font-size:13px}
+  th{background:var(--terra);color:var(--cream);text-align:left;padding:9px 11px;font-weight:600}
+  td{padding:8px 11px;border-top:1px solid var(--sand);vertical-align:top}
+  .weights{display:flex;gap:3px;align-items:flex-end;height:52px;margin-top:8px}
+  .weights div{flex:1;background:var(--sand);border-radius:3px 3px 0 0;min-width:5px}
+  .weights div.latest{background:var(--terra)}
+  .links{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px}
+  .link{background:var(--card);border-radius:12px;box-shadow:var(--shadow);padding:12px 14px;text-decoration:none;color:var(--ink);display:block;border-left:4px solid var(--terra)}
+  .link b{display:block;font-size:13.5px}
+  .link span{font-size:11.5px;color:var(--grey)}
+  .banner{background:var(--sand);border-radius:12px;padding:12px 16px;font-size:13.5px;margin:18px 0;color:var(--terra-dark)}
+  .auth{max-width:430px;margin:40px auto}
+  .grid-pics{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .pic{background:var(--card);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+  .pic img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}
+  .pic .cap{padding:7px 10px;font-size:12px;color:var(--grey);display:flex;justify-content:space-between;align-items:center}
+  .pic .cap b{color:var(--ink)}
+  .pic button{padding:2px 8px;font-size:11px;background:transparent;color:var(--grey);border:1px solid var(--sand)}
+  .day-log{font-size:13px}
+  .day-log .d{font-weight:700;color:var(--terra-dark)}
+  .ok{color:var(--green);font-weight:700}
+  .miss{color:#b3543c;font-weight:700}
+  .stat{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:16px;text-align:center}
+  .stat b{font-family:'Fraunces',serif;font-size:30px;font-weight:900;display:block;color:var(--terra-dark)}
+  .stat span{font-size:11.5px;color:var(--grey);text-transform:uppercase;letter-spacing:.08em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px}
+  footer{text-align:center;margin-top:60px;color:var(--grey);font-family:'Fraunces',serif;font-style:italic;font-size:14px}
+  .msg{font-size:13px;color:var(--green);min-height:18px;margin-top:6px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Casa Terracotta · Q3 Lock-In</div>
+  <h1>The Bridge Quarter</h1>
+  <div class="sub">July 7 – October 31, 2026 · Same Tatiana, less self-abandonment.</div>
+  <div class="counters">
+    <div class="counter"><b id="dayNum">–</b><span>Day of 117</span></div>
+    <div class="counter"><b id="toSept">–</b><span>To offer target</span></div>
+    <div class="counter"><b id="toEnd">–</b><span>Buffer days left</span></div>
+    <div class="counter"><b id="streakBig">–</b><span>Streak (limit held)</span></div>
+  </div>
+</header>
+
+<nav>
+  <button data-tab="dash" class="active">Dashboard</button>
+  <button data-tab="daily">Daily check-in</button>
+  <button data-tab="sunday">Sunday review</button>
+  <button data-tab="photos">Progress pics</button>
+  <button data-tab="proof">Tangibles</button>
+</nav>
+
+<div class="wrap">
+<div id="modeBanner"></div>
+<div id="authCard" class="auth panel" style="display:none">
+  <h3 style="color:var(--terra-dark);margin-bottom:8px">Sign in</h3>
+  <p style="font-size:13.5px;color:var(--grey);margin-bottom:12px">Magic link, no password — same as the study planner.</p>
+  <div class="row"><input type="email" id="authEmail" placeholder="tatitasantita@gmail.com"><button onclick="sendLink()">Send link</button></div>
+  <div class="msg" id="authMsg"></div>
+</div>
+
+<div id="app">
+
+<!-- ================= DASHBOARD ================= -->
+<section class="tab active" id="tab-dash">
+  <h2>The Four</h2>
+  <p class="lede">Everything on the calendar exists to make these four true.</p>
+  <div class="goals">
+    <div class="goal">
+      <div class="num">01 · CAREER</div>
+      <h3>A signed job offer</h3>
+      <div class="big" id="offerStage">Applying</div>
+      <select id="offerSelect" onchange="setOffer(this.value)">
+        <option>Applying</option><option>Screens live</option><option>Tech rounds</option>
+        <option>Onsites</option><option>Offer in hand</option><option>OFFER SIGNED 🎉</option>
+      </select>
+      <div class="bar"><i id="offerBar" style="width:8%"></i></div>
+      <small>Target: <b>September</b>. October is buffer. Quotas live in the tracker + Sunday review.</small>
+    </div>
+    <div class="goal">
+      <div class="num">02 · BODY</div>
+      <h3>Reach 125</h3>
+      <div class="big"><span id="curWeight">—</span><small> lbs · 7-day trend</small></div>
+      <div class="bar"><i id="weightBar" style="width:0%"></i></div>
+      <div class="weights" id="wChart"></div>
+      <small>Log weight in the daily check-in. 135 → <b>125</b> ≈ 0.6 lb/wk. Trend dropping &gt;1.25 lb/wk = eat more.</small>
+    </div>
+    <div class="goal">
+      <div class="num">03 · REGULATION</div>
+      <h3>Never past the limit</h3>
+      <div class="big"><span id="streakDays">–</span><small> days</small></div>
+      <div class="bar"><i id="streakBar" style="width:0%"></i></div>
+      <small>The limit: <b>2 drinks</b>, trusted company only. Streak computes from your daily check-ins — a logged slip restarts it; honesty is the practice.</small>
+    </div>
+    <div class="goal">
+      <div class="num">04 · VEUWE</div>
+      <h3>VEUWE is being pitched</h3>
+      <div class="big"><span id="pitchPct">0%</span><small> pitch-ready</small></div>
+      <div class="bar"><i id="pitchBar" style="width:0%"></i></div>
+      <div id="pitchList"></div>
+      <small>Deck prep from Oct 1; outreach the week the offer signs. Pitch employed, not panicked.</small>
+    </div>
+  </div>
+
+  <section style="margin-top:36px">
+    <h2>Everything, one tap away</h2>
+    <div class="links">
+      <a class="link" href="https://study-planner-tawny-seven.vercel.app/"><b>⚡ Study Planner</b><span>every career task</span></a>
+      <a class="link" href="https://calendar.google.com/calendar/u/0/r/week"><b>📅 Google Calendar</b><span>the daily schedule</span></a>
+      <a class="link" href="https://github.com/tatitasantita23/social-closet"><b>VEUWE repo</b><span>PR-review trail</span></a>
+      <a class="link" href="https://www.tryexponent.com/"><b>Exponent</b><span>live mocks</span></a>
+      <a class="link" href="https://devinterview.ai"><b>devinterview.ai</b><span>AI mock reps</span></a>
+      <a class="link" href="https://www.linkedin.com/jobs/"><b>LinkedIn Jobs</b><span>container hours only</span></a>
+      <a class="link" href="https://wellfound.com/"><b>Wellfound</b><span>founding cluster</span></a>
+      <a class="link" href="https://www.levels.fyi/"><b>levels.fyi</b><span>September only</span></a>
+      <a class="link" href="https://www.instagram.com/nycsalsadancer"><b>NYC Salsa Dance</b><span>Sat 12–3 anchor</span></a>
+      <a class="link" href="https://freemindthestudioclasses.as.me/bookaclass"><b>Free Mind</b><span>Femme HipHop Mon 5:30</span></a>
+      <a class="link" href="https://www.sassclassnyc.com/classes"><b>SassClass</b><span>Wed David double</span></a>
+      <a class="link" href="https://dayayoga.studiogrowth.com/schedule?locations=14"><b>Daya Yoga</b><span>Sun 7:30 Yin</span></a>
+    </div>
+  </section>
+</section>
+
+<!-- ================= DAILY ================= -->
+<section class="tab" id="tab-daily">
+  <h2>Daily check-in</h2>
+  <p class="lede">Ninety seconds, once a day — ideally at the evening Review &amp; Quiz. The streak, the trend line, and the Sunday review all read from here.</p>
+  <div class="cols">
+    <div class="panel">
+      <label class="f">Date</label>
+      <input type="date" id="dDate">
+      <label class="f">7-day habits</label>
+      <div class="pillrow" id="dHabits"></div>
+      <label class="f">Training done today</label>
+      <div class="pillrow" id="dTraining"></div>
+      <label class="f">Drinks</label>
+      <div class="pillrow" id="dDrinks"></div>
+      <label class="f">Trend weight (optional, morning)</label>
+      <input type="number" step="0.1" id="dWeight" placeholder="e.g. 133.4">
+      <label class="f">One line about today</label>
+      <textarea id="dNote" placeholder="what regulated you, what activated you, one win"></textarea>
+      <div class="row" style="margin-top:12px"><button onclick="saveDaily()">Save check-in</button><div class="msg" id="dMsg"></div></div>
+    </div>
+    <div class="panel">
+      <h3 style="color:var(--terra-dark);margin-bottom:10px">Last 14 days</h3>
+      <div id="dailyLog" class="day-log"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SUNDAY ================= -->
+<section class="tab" id="tab-sunday">
+  <h2>🧱 Sunday review</h2>
+  <p class="lede">30 minutes, sacred. Read from the planner, the tracker, and GitHub — never memory. Standing item: offers in <b>September</b>; October is buffer.</p>
+  <div class="cols">
+    <div class="panel">
+      <label class="f">Week ending (Sunday)</label>
+      <input type="date" id="sDate">
+      <div class="cols" style="gap:10px">
+        <div><label class="f">Applications sent (10–15)</label><input type="number" id="sApps"></div>
+        <div><label class="f">Warm touches (5)</label><input type="number" id="sTouches"></div>
+        <div><label class="f">Mocks / live reps</label><input type="number" id="sMocks"></div>
+        <div><label class="f">Lifts (of 3)</label><input type="number" id="sLifts"></div>
+        <div><label class="f">Runs (of 2)</label><input type="number" id="sRuns"></div>
+        <div><label class="f">Trend weight</label><input type="number" step="0.1" id="sWeight"></div>
+      </div>
+      <label class="f">One moment I regulated well</label><textarea id="sGood"></textarea>
+      <label class="f">One moment I didn't (data, not judgment)</label><textarea id="sBad"></textarea>
+      <label class="f">Top 3 for next week</label><textarea id="sTop3"></textarea>
+      <label class="f">Checks</label>
+      <div class="pillrow" id="sChecks"></div>
+      <div class="row" style="margin-top:12px"><button onclick="saveSunday()">Save review</button><div class="msg" id="sMsg"></div></div>
+    </div>
+    <div class="panel">
+      <h3 style="color:var(--terra-dark);margin-bottom:10px">Past reviews <span id="revCount" style="font-size:13px;color:var(--grey)"></span></h3>
+      <div id="sundayLog" class="day-log"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PHOTOS ================= -->
+<section class="tab" id="tab-photos">
+  <h2>Progress pics</h2>
+  <p class="lede">Daily or whenever — the camera sees what the scale hides. Milestone sets: <b>Jul 7 · Aug 15 · Oct 1 · Oct 31</b>. Photos live in a private bucket only you can access.</p>
+  <div class="panel" style="margin-bottom:18px">
+    <div class="row">
+      <input type="file" id="picFile" accept="image/*" capture="environment" style="flex:1">
+      <button onclick="uploadPic()">Upload</button>
+    </div>
+    <div class="msg" id="picMsg"></div>
+  </div>
+  <div class="grid-pics" id="picGrid"></div>
+</section>
+
+<!-- ================= TANGIBLES ================= -->
+<section class="tab" id="tab-proof">
+  <h2>Tangibles — measurable proof</h2>
+  <p class="lede">Numbers that prove it happened. Some count themselves from your check-ins; the rest you log as they land.</p>
+  <div class="stats">
+    <div class="stat"><b id="pStreak">–</b><span>day streak</span></div>
+    <div class="stat"><b id="pCheckins">–</b><span>check-ins logged</span></div>
+    <div class="stat"><b id="pReviews">–</b><span>Sunday reviews</span></div>
+    <div class="stat"><b id="pLifts">–</b><span>lifts this quarter</span></div>
+    <div class="stat"><b id="pMocks">–</b><span>mocks (logged)</span></div>
+    <div class="stat"><b id="pPRs">–</b><span>reviewed PRs</span></div>
+  </div>
+  <div class="cols">
+    <div class="panel">
+      <h3 style="color:var(--terra-dark);margin-bottom:8px">Log proof</h3>
+      <label class="f">Kind</label>
+      <select id="prKind">
+        <option>Squat PR (lbs)</option><option>Hip thrust PR (lbs)</option>
+        <option>Mock completed</option><option>PR reviewed by Ngozi (GitHub)</option>
+        <option>Application milestone (e.g. 30th sent)</option>
+        <option>Waist (in)</option><option>Hips (in)</option>
+        <option>Salsa milestone</option><option>Other</option>
+      </select>
+      <label class="f">Value</label><input id="prValue" placeholder="e.g. 185, or 'passed with hire'">
+      <label class="f">Date</label><input type="date" id="prDate">
+      <label class="f">Note (optional)</label><input id="prNote">
+      <div class="row" style="margin-top:12px"><button onclick="addProof()">Log it</button><div class="msg" id="prMsg"></div></div>
+    </div>
+    <div class="panel">
+      <h3 style="color:var(--terra-dark);margin-bottom:8px">The record</h3>
+      <div id="proofLog" class="day-log"></div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /app -->
+<footer><p>Brick by brick. In due season we will reap, if we do not give up. — Gal 6:9</p></footer>
+</div>
+
+<script>
+/* ============ CONFIG — paste your Supabase project values here ============ */
+const CONFIG = {
+  SUPABASE_URL: "",        // e.g. https://xxxx.supabase.co
+  SUPABASE_ANON_KEY: ""    // anon public key (safe in browser; RLS protects rows)
+};
+/* ========================================================================= */
+
+const START = new Date('2026-07-07T00:00:00');
+const SEPT  = new Date('2026-09-30T23:59:59');
+const END   = new Date('2026-10-31T23:59:59');
+const TOTAL = 117;
+const day = ms => Math.floor(ms / 86400000);
+const todayISO = () => new Date().toISOString().slice(0,10);
+const cloud = !!(CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY);
+const sb = cloud ? supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY) : null;
+let user = null;
+
+/* ---------- local fallback store ---------- */
+const LKEY = 'bridgeQuarterV2';
+const L = JSON.parse(localStorage.getItem(LKEY) || '{}');
+L.state ||= {}; L.daily ||= {}; L.sunday ||= {}; L.proof ||= [];
+const lsave = () => localStorage.setItem(LKEY, JSON.stringify(L));
+
+/* ---------- data layer (cloud or local) ---------- */
+const DB = {
+  async getState(){ if(!cloud) return L.state;
+    const {data} = await sb.from('bq_state').select('data').eq('user_id',user.id).maybeSingle();
+    return data?.data || {}; },
+  async saveState(s){ if(!cloud){ L.state=s; lsave(); return; }
+    await sb.from('bq_state').upsert({user_id:user.id, data:s, updated_at:new Date()}); },
+  async listDaily(){ if(!cloud) return Object.entries(L.daily).map(([day,data])=>({day,data})).sort((a,b)=>a.day<b.day?1:-1);
+    const {data} = await sb.from('bq_daily').select('day,data').eq('user_id',user.id).order('day',{ascending:false}).limit(180);
+    return data||[]; },
+  async saveDaily(dayKey,d){ if(!cloud){ L.daily[dayKey]=d; lsave(); return; }
+    await sb.from('bq_daily').upsert({user_id:user.id, day:dayKey, data:d, updated_at:new Date()}); },
+  async listSunday(){ if(!cloud) return Object.entries(L.sunday).map(([week_ending,data])=>({week_ending,data})).sort((a,b)=>a.week_ending<b.week_ending?1:-1);
+    const {data} = await sb.from('bq_sunday').select('week_ending,data').eq('user_id',user.id).order('week_ending',{ascending:false});
+    return data||[]; },
+  async saveSunday(wk,d){ if(!cloud){ L.sunday[wk]=d; lsave(); return; }
+    await sb.from('bq_sunday').upsert({user_id:user.id, week_ending:wk, data:d, updated_at:new Date()}); },
+  async listProof(){ if(!cloud) return L.proof.slice().sort((a,b)=>a.day<b.day?1:-1);
+    const {data} = await sb.from('bq_proof').select('*').eq('user_id',user.id).order('day',{ascending:false});
+    return data||[]; },
+  async addProof(p){ if(!cloud){ L.proof.push({...p, id:Date.now()+''}); lsave(); return; }
+    await sb.from('bq_proof').insert({...p, user_id:user.id}); },
+};
+
+/* ---------- auth ---------- */
+async function sendLink(){
+  const email = document.getElementById('authEmail').value.trim();
+  if(!email) return;
+  const {error} = await sb.auth.signInWithOtp({email, options:{emailRedirectTo: location.href.split('#')[0]}});
+  document.getElementById('authMsg').textContent = error ? error.message : 'Link sent — check your email ✓';
+}
+async function boot(){
+  if(cloud){
+    const {data:{session}} = await sb.auth.getSession();
+    user = session?.user || null;
+    sb.auth.onAuthStateChange((_e,s)=>{ const had=!!user; user=s?.user||null; if(!!user!==had) boot(); });
+    document.getElementById('authCard').style.display = user ? 'none' : 'block';
+    document.getElementById('app').style.display = user ? 'block' : 'none';
+    if(!user){ renderHeader([]); return; }
+  } else {
+    document.getElementById('modeBanner').innerHTML =
+      '<div class="banner">⚠️ <b>Local mode</b> — data stays in this browser and photos are disabled. To sync across devices + enable pics: run <code>supabase-schema.sql</code>, paste your project URL + anon key into CONFIG at the top of this file, redeploy. See DEPLOY.md.</div>';
+  }
+  await refreshAll();
+}
+
+/* ---------- header + dashboard ---------- */
+let cacheDaily = [], cacheState = {}, cacheSunday = [], cacheProof = [];
+
+function renderHeader(daily){
+  const now = new Date();
+  const dayNum = Math.min(TOTAL, Math.max(0, day(now - START) + 1));
+  document.getElementById('dayNum').textContent = now < START ? '0' : dayNum;
+  document.getElementById('toSept').textContent = Math.max(0, day(SEPT - now));
+  document.getElementById('toEnd').textContent  = Math.max(0, day(END - now));
+  const streak = calcStreak(daily);
+  document.getElementById('streakBig').textContent = streak;
+}
+function calcStreak(daily){
+  const lastSlip = daily.find(r => r.data.drinks === 'over');
+  const from = lastSlip ? new Date(lastSlip.day+'T00:00:00') : START;
+  return Math.max(0, day(new Date() - from));
+}
+function trendWeight(daily){
+  const w = daily.filter(r=>r.data.weight).slice(0,7).map(r=>+r.data.weight);
+  return w.length ? w.reduce((a,b)=>a+b,0)/w.length : null;
+}
+const stages = ['Applying','Screens live','Tech rounds','Onsites','Offer in hand','OFFER SIGNED 🎉'];
+async function setOffer(v){ cacheState.offer = v; await DB.saveState(cacheState); renderDash(); }
+const pitchItems = [
+  ['demo','Demo runs on the first try'],
+  ['walk','Walkthrough choreographed (15 min, repo-verified)'],
+  ['prs','8+ PRs with Ngozi\'s reviews on GitHub'],
+  ['deck','Pitch deck v1 (Oct 1 — built from the walkthrough)'],
+  ['pipeline','Investor pipeline (10+ names, warm intros mapped)'],
+  ['outreach','Outreach begun (week after the offer signs)'],
+  ['meeting','First pitch meeting held — being pitched ✓'],
+];
+function renderDash(){
+  const offer = cacheState.offer || 'Applying';
+  document.getElementById('offerStage').textContent = offer;
+  document.getElementById('offerSelect').value = offer;
+  document.getElementById('offerBar').style.width = ((stages.indexOf(offer)+1)/stages.length*100)+'%';
+
+  const t = trendWeight(cacheDaily);
+  document.getElementById('curWeight').textContent = t ? t.toFixed(1) : '—';
+  document.getElementById('weightBar').style.width = t ? Math.min(100,Math.max(0,(135-t)/10*100))+'%' : '0%';
+  const chart = document.getElementById('wChart'); chart.innerHTML='';
+  const recent = cacheDaily.filter(r=>r.data.weight).slice(0,21).reverse();
+  if(recent.length){
+    const vals = recent.map(r=>+r.data.weight);
+    const min = Math.min(...vals,124), max = Math.max(...vals,136);
+    recent.forEach((r,i)=>{ const d=document.createElement('div');
+      d.style.height=(8+(+r.data.weight-min)/(max-min||1)*44)+'px'; d.title=`${r.day}: ${r.data.weight}`;
+      if(i===recent.length-1)d.className='latest'; chart.appendChild(d); });
+  }
+  const streak = calcStreak(cacheDaily);
+  document.getElementById('streakDays').textContent = streak;
+  document.getElementById('streakBar').style.width = Math.min(100,streak/TOTAL*100)+'%';
+
+  const box = document.getElementById('pitchList'); box.innerHTML=''; let done=0;
+  const p = cacheState.pitch || {};
+  pitchItems.forEach(([k,label])=>{
+    const l=document.createElement('label'); l.className='check';
+    const c=document.createElement('input'); c.type='checkbox'; c.checked=!!p[k]; if(c.checked)done++;
+    c.onchange=async()=>{ p[k]=c.checked; cacheState.pitch=p; await DB.saveState(cacheState); renderDash(); };
+    const s=document.createElement('span'); s.textContent=label; if(c.checked)s.className='done';
+    l.append(c,s); box.appendChild(l);
+  });
+  const pct = Math.round(done/pitchItems.length*100);
+  document.getElementById('pitchPct').textContent=pct+'%';
+  document.getElementById('pitchBar').style.width=pct+'%';
+  renderHeader(cacheDaily);
+}
+
+/* ---------- daily tab ---------- */
+const HABITS=[['reg','10-min regulation'],['protein','120g protein'],['steps','8k steps'],['phone','phone rule held']];
+const TRAIN=[['lift','Lift'],['run','Run'],['dance','Dance'],['rest','Rest day']];
+const DRINKS=[['none','None'],['within','1–2 (within limit)'],['over','Over the limit']];
+let dSel={habits:{},training:{},drinks:'none'};
+function pillbar(elId, items, sel, single){
+  const el=document.getElementById(elId); el.innerHTML='';
+  items.forEach(([k,label])=>{
+    const b=document.createElement('div'); b.className='pill'; b.textContent=label;
+    const on = single ? sel.value===k : !!sel[k];
+    if(on) b.classList.add('on');
+    b.onclick=()=>{ if(single){sel.value=k;} else {sel[k]=!sel[k];} pillbar(elId,items,sel,single); };
+    el.appendChild(b);
+  });
+}
+function drawDailyForm(){
+  document.getElementById('dDate').value = todayISO();
+  pillbar('dHabits',HABITS,dSel.habits,false);
+  pillbar('dTraining',TRAIN,dSel.training,false);
+  dSel.drinksSel={value:dSel.drinks};
+  pillbar('dDrinks',DRINKS,dSel.drinksSel,true);
+}
+async function saveDaily(){
+  const d = document.getElementById('dDate').value || todayISO();
+  const data = {
+    habits: dSel.habits, training: dSel.training,
+    drinks: dSel.drinksSel.value,
+    weight: document.getElementById('dWeight').value || null,
+    note: document.getElementById('dNote').value || ''
+  };
+  if(data.drinks==='over' && !confirm('Logging over the limit — the streak restarts. Honesty is the practice. Save?')) return;
+  await DB.saveDaily(d, data);
+  document.getElementById('dMsg').textContent='Saved ✓';
+  setTimeout(()=>document.getElementById('dMsg').textContent='',2000);
+  document.getElementById('dWeight').value=''; document.getElementById('dNote').value='';
+  dSel={habits:{},training:{},drinks:'none'}; drawDailyForm();
+  await refreshAll();
+}
+function renderDailyLog(){
+  const el=document.getElementById('dailyLog'); el.innerHTML='';
+  cacheDaily.slice(0,14).forEach(r=>{
+    const h=r.data.habits||{}, t=r.data.training||{};
+    const habits=HABITS.map(([k,l])=>h[k]?'✓':'·').join(' ');
+    const train=TRAIN.filter(([k])=>t[k]).map(([,l])=>l).join(', ')||'—';
+    const drink=r.data.drinks==='over'?'<span class="miss">OVER</span>':r.data.drinks==='within'?'1–2':'0';
+    const div=document.createElement('div');
+    div.style.cssText='padding:8px 0;border-bottom:1px dashed var(--sand)';
+    div.innerHTML=`<span class="d">${r.day.slice(5)}</span> · habits ${habits} · ${train} · drinks ${drink}${r.data.weight?' · '+r.data.weight+' lb':''}${r.data.note?'<br><span style="color:var(--grey)">'+r.data.note+'</span>':''}`;
+    el.appendChild(div);
+  });
+  if(!cacheDaily.length) el.innerHTML='<span style="color:var(--grey)">No check-ins yet. Day 1 is a good day to start.</span>';
+}
+
+/* ---------- sunday tab ---------- */
+const SCHECKS=[['review30','30 min held'],['closeout','planner close-out run'],['freemind','Free Mind Sat checked'],['september','September framing said out loud']];
+let sSel={checks:{}};
+function nextSunday(){ const d=new Date(); d.setDate(d.getDate()+(7-d.getDay())%7); return d.toISOString().slice(0,10); }
+function drawSundayForm(){
+  document.getElementById('sDate').value = nextSunday();
+  pillbar('sChecks',SCHECKS,sSel.checks,false);
+  const t=trendWeight(cacheDaily); if(t) document.getElementById('sWeight').value=t.toFixed(1);
+}
+async function saveSunday(){
+  const wk=document.getElementById('sDate').value||nextSunday();
+  const g=id=>document.getElementById(id).value;
+  await DB.saveSunday(wk,{apps:g('sApps'),touches:g('sTouches'),mocks:g('sMocks'),lifts:g('sLifts'),runs:g('sRuns'),
+    weight:g('sWeight'),good:g('sGood'),bad:g('sBad'),top3:g('sTop3'),checks:sSel.checks});
+  document.getElementById('sMsg').textContent='Saved ✓ — brick laid';
+  setTimeout(()=>document.getElementById('sMsg').textContent='',2500);
+  ['sApps','sTouches','sMocks','sLifts','sRuns','sGood','sBad','sTop3'].forEach(id=>document.getElementById(id).value='');
+  sSel={checks:{}}; drawSundayForm(); await refreshAll();
+}
+function renderSundayLog(){
+  const el=document.getElementById('sundayLog'); el.innerHTML='';
+  document.getElementById('revCount').textContent=`(${cacheSunday.length} of 17)`;
+  cacheSunday.forEach(r=>{
+    const d=r.data;
+    const quota = (+d.apps>=10?'<span class="ok">apps ✓</span>':'<span class="miss">apps '+(d.apps||0)+'</span>')
+      +' · '+(+d.touches>=5?'<span class="ok">touches ✓</span>':'<span class="miss">touches '+(d.touches||0)+'</span>');
+    const div=document.createElement('div');
+    div.style.cssText='padding:9px 0;border-bottom:1px dashed var(--sand)';
+    div.innerHTML=`<span class="d">wk ${r.week_ending}</span> · ${quota} · mocks ${d.mocks||0} · lifts ${d.lifts||0}/3 · runs ${d.runs||0}/2${d.weight?' · '+d.weight+' lb':''}
+      ${d.good?'<br><span style="color:var(--green)">＋ '+d.good+'</span>':''}${d.bad?'<br><span style="color:var(--grey)">－ '+d.bad+'</span>':''}${d.top3?'<br><span style="color:var(--grey)">next: '+d.top3+'</span>':''}`;
+    el.appendChild(div);
+  });
+  if(!cacheSunday.length) el.innerHTML='<span style="color:var(--grey)">First review: Sunday Jul 12, 6:00pm.</span>';
+}
+
+/* ---------- photos tab ---------- */
+async function uploadPic(){
+  const f=document.getElementById('picFile').files[0];
+  const msg=document.getElementById('picMsg');
+  if(!cloud){ msg.textContent='Photos need Supabase — see DEPLOY.md'; return; }
+  if(!f){ msg.textContent='Pick a photo first'; return; }
+  msg.textContent='Uploading…';
+  const path=`${user.id}/${todayISO()}-${Date.now()}.${(f.name.split('.').pop()||'jpg')}`;
+  const {error}=await sb.storage.from('progress-pics').upload(path,f,{contentType:f.type});
+  msg.textContent=error?error.message:'Uploaded ✓';
+  document.getElementById('picFile').value='';
+  await renderPics();
+}
+async function renderPics(){
+  const grid=document.getElementById('picGrid'); grid.innerHTML='';
+  if(!cloud){ grid.innerHTML='<span style="color:var(--grey)">Connect Supabase to enable the private photo vault.</span>'; return; }
+  const {data:files}=await sb.storage.from('progress-pics').list(user.id,{limit:200,sortBy:{column:'name',order:'desc'}});
+  if(!files||!files.length){ grid.innerHTML='<span style="color:var(--grey)">No pics yet. Baseline set: Jul 7.</span>'; return; }
+  for(const f of files){
+    const {data:s}=await sb.storage.from('progress-pics').createSignedUrl(`${user.id}/${f.name}`,3600);
+    const div=document.createElement('div'); div.className='pic';
+    const dateLabel=f.name.slice(0,10);
+    div.innerHTML=`<img src="${s.signedUrl}" loading="lazy"><div class="cap"><b>${dateLabel}</b></div>`;
+    const del=document.createElement('button'); del.textContent='delete';
+    del.onclick=async()=>{ if(confirm('Delete this photo?')){ await sb.storage.from('progress-pics').remove([`${user.id}/${f.name}`]); renderPics(); } };
+    div.querySelector('.cap').appendChild(del);
+    grid.appendChild(div);
+  }
+}
+
+/* ---------- tangibles tab ---------- */
+async function addProof(){
+  const kind=document.getElementById('prKind').value;
+  const value=document.getElementById('prValue').value.trim();
+  if(!value){ document.getElementById('prMsg').textContent='Value needed'; return; }
+  await DB.addProof({kind,value,day:document.getElementById('prDate').value||todayISO(),note:document.getElementById('prNote').value||null});
+  document.getElementById('prMsg').textContent='Logged ✓';
+  setTimeout(()=>document.getElementById('prMsg').textContent='',2000);
+  document.getElementById('prValue').value=''; document.getElementById('prNote').value='';
+  await refreshAll();
+}
+function renderProof(){
+  document.getElementById('pStreak').textContent=calcStreak(cacheDaily);
+  document.getElementById('pCheckins').textContent=cacheDaily.length;
+  document.getElementById('pReviews').textContent=cacheSunday.length+'/17';
+  const lifts=cacheDaily.filter(r=>r.data.training&&r.data.training.lift).length;
+  document.getElementById('pLifts').textContent=lifts;
+  document.getElementById('pMocks').textContent=cacheProof.filter(p=>p.kind==='Mock completed').length;
+  document.getElementById('pPRs').textContent=cacheProof.filter(p=>p.kind.startsWith('PR reviewed')).length+'/8';
+  const el=document.getElementById('proofLog'); el.innerHTML='';
+  cacheProof.forEach(p=>{
+    const div=document.createElement('div');
+    div.style.cssText='padding:8px 0;border-bottom:1px dashed var(--sand)';
+    div.innerHTML=`<span class="d">${p.day.slice(5)}</span> · <b>${p.kind}</b> — ${p.value}${p.note?' <span style="color:var(--grey)">('+p.note+')</span>':''}`;
+    el.appendChild(div);
+  });
+  if(!cacheProof.length) el.innerHTML='<span style="color:var(--grey)">The record starts empty. It won\'t stay that way.</span>';
+}
+
+/* ---------- tabs + refresh ---------- */
+document.querySelectorAll('nav button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('section.tab').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('tab-'+b.dataset.tab).classList.add('active');
+    if(b.dataset.tab==='photos') renderPics();
+  };
+});
+async function refreshAll(){
+  cacheState = await DB.getState();
+  cacheDaily = await DB.listDaily();
+  cacheSunday = await DB.listSunday();
+  cacheProof = await DB.listProof();
+  renderDash(); renderDailyLog(); renderSundayLog(); renderProof();
+  drawDailyForm(); drawSundayForm();
+  document.getElementById('prDate').value=todayISO();
+}
+boot();
+</script>
+</body>
+</html>
