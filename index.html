@@ -120,7 +120,7 @@
 <div id="authCard" class="auth panel" style="display:none">
   <h3 style="color:var(--terra-dark);margin-bottom:8px">Sign in</h3>
   <p style="font-size:13.5px;color:var(--grey);margin-bottom:12px">Magic link, no password — same as the study planner.</p>
-  <div class="row"><input type="email" id="authEmail" placeholder="tatitasantita@gmail.com"><button onclick="sendLink()">Send link</button></div>
+  <div class="row"><input type="email" id="authEmail" placeholder="type your email" autocomplete="email"><button onclick="sendLink()">Send link</button></div>
   <div class="msg" id="authMsg"></div>
 </div>
 
@@ -346,10 +346,12 @@ const DB = {
 
 /* ---------- auth ---------- */
 async function sendLink(){
+  const msg = document.getElementById('authMsg');
   const email = document.getElementById('authEmail').value.trim();
-  if(!email) return;
-  const {error} = await sb.auth.signInWithOtp({email, options:{emailRedirectTo: location.href.split('#')[0]}});
-  document.getElementById('authMsg').textContent = error ? error.message : 'Link sent — check your email ✓';
+  if(!email){ msg.textContent = 'Type your email in the box first ↑'; return; }
+  msg.textContent = 'Sending…';
+  const {error} = await sb.auth.signInWithOtp({email, options:{emailRedirectTo: 'https://tatitasantita23.github.io/bridge-quarter/'}});
+  msg.textContent = error ? error.message : 'Link sent — check your email ✓ (and spam, the first time)';
 }
 async function boot(){
   if(cloud){
