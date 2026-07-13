@@ -494,11 +494,13 @@ async function saveDaily(){
 function renderDailyLog(){
   const el=document.getElementById('dailyLog'); el.innerHTML='';
   cacheDaily.slice(0,14).forEach(r=>{
-    const h=r.data.habits||{};
-    const marks=HABITS.map(([k,l])=> k==='limit' ? (h[k]?'<span class="ok">✓limit</span>':'<span class="miss">SLIP</span>') : (h[k]?'✓':'·')).join(' ');
+    const h=(r.data&&r.data.habits)||{};
+    const done=HABITS.filter(([k])=>h[k]===true);
+    const icons=done.map(([k,l])=>l.split(' ')[0]).join(' ');
+    const slip = h.limit===false; // only an explicit saved slip counts — unanswered ≠ failed
     const div=document.createElement('div');
     div.style.cssText='padding:8px 0;border-bottom:1px dashed var(--sand)';
-    div.innerHTML=`<span class="d">${r.day.slice(5)}</span> · ${marks}${r.data.note?'<br><span style="color:var(--grey)">'+r.data.note+'</span>':''}`;
+    div.innerHTML=`<span class="d">${r.day.slice(5)}</span> · <b>${done.length}/6</b>&nbsp; ${icons||'<span style="color:var(--grey)">nothing logged</span>'}${slip?' <span class="miss">SLIP</span>':''}${r.data.note?'<br><span style="color:var(--grey)">'+r.data.note+'</span>':''}`;
     el.appendChild(div);
   });
   if(!cacheDaily.length) el.innerHTML='<span style="color:var(--grey)">Day 1 is today. Sixty seconds.</span>';
