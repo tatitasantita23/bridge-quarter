@@ -217,20 +217,23 @@
     </div>
     <div class="panel">
       <h3 style="color:var(--terra-dark);margin-bottom:8px">2 · Draft next week → calendar</h3>
-      <label class="f">Monday dance window</label>
-      <select id="wMon"></select>
-      <label class="f">Saturday dance window</label>
-      <select id="wSat"></select>
-      <label class="f">Weeknight salsa adds (Varet St, 7–9pm)</label>
-      <div class="pillrow" id="wSalsa"></div>
-      <label class="f">Extra events (interviews, mocks, plans)</label>
-      <div id="wExtras"></div>
-      <button class="ghost" onclick="addExtraRow()" style="margin-top:6px">+ add another</button>
-      <div class="row" style="margin-top:14px">
-        <button onclick="generateWeek()">⬇ Generate week (.ics for Google Calendar)</button>
+      <label class="f">Describe your week — anything goes</label>
+      <textarea id="wPrompt" placeholder="femme hiphop monday, salsa tue + thu 7-9pm, saturday salsa 12-3, mock interview fri 10am 1h, coffee with Ana wed 2pm @ Sey"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button onclick="proposeWeek()">Propose plan</button>
+        <div class="msg" id="wMsg"></div>
       </div>
-      <div class="msg" id="wMsg"></div>
-      <small>Downloads a calendar file with only the events you picked. Open it (tap on phone / double-click on Mac) → it lands in Google Calendar on top of the standing weekly clock. Then book the classes: Free Mind pre-reg, SassClass MindBody, salsa walk-in.</small>
+      <div id="wPlan" style="margin-top:6px"></div>
+      <div class="row" id="wActions" style="margin-top:10px;display:none">
+        <button class="ghost" onclick="planRow()">+ add event</button>
+        <button onclick="downloadWeekIcs()">⬇ Add all to Google Calendar (.ics)</button>
+      </div>
+      <small>Write the week in your own words → <b>Propose plan</b> turns it into events (it knows your regular classes) → edit anything → add to Google Calendar: the .ics adds everything at once (tap on phone / double-click on Mac), or use a row's <b>GCal</b> button to add just that event in the browser. Then book the classes: Free Mind pre-reg, SassClass MindBody, salsa walk-in.</small>
+      <details style="margin-top:12px"><summary style="cursor:pointer;font-size:12px;color:var(--grey)">Smarter parsing (optional) — Claude API key</summary>
+        <label class="f">Anthropic API key — stays in this browser only</label>
+        <div class="row"><input id="wKey" type="password" placeholder="sk-ant-…"><button class="ghost" onclick="saveClaudeKey()">Save</button></div>
+        <small>With a key saved, Propose plan sends your text to Claude (claude-opus-4-8) and understands almost any phrasing. Without one, a built-in parser handles the common patterns above. Saving an empty box removes the key.</small>
+      </details>
     </div>
   </div>
 </section>
@@ -285,10 +288,6 @@
           <select id="qCk"><option>Mock completed</option><option>PR reviewed by Ngozi</option><option>Screen done</option><option>Onsite done</option></select>
           <button onclick="logQuick('career',document.getElementById('qCk').value,1,'rep')">Log</button>
         </div>
-      </div>
-      <div class="quick">
-        <h4>🚀 VEUWE pitch checklist</h4>
-        <div id="pitchList"></div>
       </div>
       <div class="quick">
         <h4>✨ Anything else</h4>
@@ -404,30 +403,9 @@ function renderHeader(daily){
 /* ---------- dashboard ---------- */
 const stages = ['Applying','Screens live','Tech rounds','Onsites','Offer in hand','OFFER SIGNED 🎉'];
 async function setOffer(v){ cacheState.offer = v; await DB.saveState(cacheState); renderDash(); }
-const pitchItems = [
-  ['demo','Demo runs on the first try'],
-  ['walk','Walkthrough choreographed (15 min, repo-verified)'],
-  ['prs','8+ PRs with Ngozi\'s reviews on GitHub'],
-  ['deck','Pitch deck v1 (Oct 1)'],
-  ['pipeline','Investor pipeline (10+ names)'],
-  ['outreach','Outreach begun (post-offer)'],
-  ['meeting','First pitch meeting — being pitched ✓'],
-];
 function renderDash(){
   const sel=document.getElementById('offerSelect');
   if(sel) sel.value = cacheState.offer || 'Applying';
-  const box = document.getElementById('pitchList');
-  if(box){
-    box.innerHTML='';
-    const p = cacheState.pitch || {};
-    pitchItems.forEach(([k,label])=>{
-      const l=document.createElement('label'); l.className='check';
-      const c=document.createElement('input'); c.type='checkbox'; c.checked=!!p[k];
-      c.onchange=async()=>{ p[k]=c.checked; cacheState.pitch=p; await DB.saveState(cacheState); renderDash(); };
-      const s=document.createElement('span'); s.textContent=label; if(c.checked)s.className='done';
-      l.append(c,s); box.appendChild(l);
-    });
-  }
   renderHeader(cacheDaily);
 }
 
@@ -492,67 +470,172 @@ function nextWeekDates(){ // Mon..Sun after the upcoming Sunday-of-review (i.e.,
   const out={}; ['MO','TU','WE','TH','FR','SA','SU'].forEach((k,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); out[k]=d; });
   return out;
 }
-const MON_MENU = [
-  ['none','— leave empty —',null],
-  ['ffh','Femme HipHop @ Free Mind 5:30–6:45',{day:'MO',start:'17:30',min:75,loc:'538 Johnson Ave, Brooklyn',t:'Femme HipHop @ Free Mind (leave Ngozi\'s 4:30 · pre-register!)'}],
-  ['fm7','Free Mind 7:00 class (Disney/varies)',{day:'MO',start:'19:00',min:75,loc:'538 Johnson Ave, Brooklyn',t:'Free Mind 7pm class (pre-register)'}],
-  ['fm830','Free Mind 8:30 class (House/varies)',{day:'MO',start:'20:30',min:75,loc:'538 Johnson Ave, Brooklyn',t:'Free Mind 8:30 class (pre-register)'}],
-  ['ssj','SassClass — David Sultry Street Jazz 8:30',{day:'MO',start:'20:30',min:60,loc:'41 W 36th St, NYC',t:'SassClass — Sultry Street Jazz (David)'}],
+/* Regulars the parsers can resolve by keyword — fills day/time/place when the text doesn't say */
+const KNOWN=[
+  {kw:['femme','hiphop','hip-hop'], t:'Femme HipHop @ Free Mind (pre-register!)', day:'MO', start:'17:30', min:75, loc:'538 Johnson Ave, Brooklyn'},
+  {kw:['sass'], t:'SassClass — David (Stilettos + Reggaeton)', day:'WE', start:'19:20', min:130, loc:'41 W 36th St, NYC'},
+  {kw:['salsa'], t:'Salsa — Varet St', start:'19:00', min:120, loc:'232 Varet St, Brooklyn', sat:{start:'12:00',min:180,t:'Salsa — Styling + Int. Footwork + Partnerwork'}},
+  {kw:['reggaeton','free mind','freemind'], t:'Free Mind class (pre-register)', min:75, loc:'538 Johnson Ave, Brooklyn'},
+  {kw:['yin','daya','yoga'], t:'Daya Yoga — Yin & Sound', day:'SU', start:'19:30', min:75, loc:'149 Irving Ave, Brooklyn'},
 ];
-const SAT_MENU = [
-  ['none','— leave empty —',null],
-  ['salsa','Salsa 12–3 @ Varet St (default)',{day:'SA',start:'12:00',min:180,loc:'232 Varet St, Brooklyn',t:'Salsa — Styling + Int. Footwork + Partnerwork'}],
-  ['salsa2','Salsa 12–2 (skip partnerwork)',{day:'SA',start:'12:00',min:120,loc:'232 Varet St, Brooklyn',t:'Salsa — Styling + Int. Footwork'}],
-  ['fmreg','Free Mind Sat Reggaeton (check time when posted)',{day:'SA',start:'12:00',min:75,loc:'538 Johnson Ave, Brooklyn',t:'Free Mind — Sat Reggaeton (confirm time!)'}],
-  ['sass','SassClass Sat afternoon (FFHH 3pm / Twerk 4:25)',{day:'SA',start:'15:00',min:60,loc:'41 W 36th St, NYC',t:'SassClass — Saturday class'}],
-];
-let wSalsaSel={};
 function drawSundayForm(){
   document.getElementById('sDate').value = nextSunday();
   pillbar('sChecks',SCHECKS,sSel.checks);
-  const mk=(id,menu)=>{ const s=document.getElementById(id); s.innerHTML='';
-    menu.forEach(([v,label])=>{ const o=document.createElement('option'); o.value=v; o.textContent=label; s.appendChild(o); }); };
-  mk('wMon',MON_MENU); mk('wSat',SAT_MENU);
-  document.getElementById('wSat').value='salsa';
-  const el=document.getElementById('wSalsa'); el.innerHTML='';
-  [['TU','Tuesday'],['TH','Thursday']].forEach(([k,label])=>{
-    const b=document.createElement('div'); b.className='pill'; b.textContent=label+' 7–9';
-    if(wSalsaSel[k]) b.classList.add('on');
-    b.onclick=()=>{ wSalsaSel[k]=!wSalsaSel[k]; drawSundayForm(); };
-    el.appendChild(b);
-  });
-  if(!document.getElementById('wExtras').children.length) addExtraRow();
+  const ki=document.getElementById('wKey');
+  if(ki && localStorage.getItem('bq.claudeKey')) ki.placeholder='saved ✓ — paste to replace';
 }
-function addExtraRow(){
-  const box=document.getElementById('wExtras');
-  const row=document.createElement('div'); row.className='row'; row.style.marginTop='6px';
-  row.innerHTML=`<input placeholder="title" style="flex:2;min-width:100px">
-    <select style="width:auto"><option>MO</option><option>TU</option><option>WE</option><option>TH</option><option>FR</option><option>SA</option><option>SU</option></select>
-    <input placeholder="14:00" style="width:64px;flex:none">
-    <input type="number" placeholder="60" title="minutes" style="width:60px;flex:none">`;
+function saveClaudeKey(){
+  const ki=document.getElementById('wKey'); const v=ki.value.trim();
+  if(v) localStorage.setItem('bq.claudeKey',v); else localStorage.removeItem('bq.claudeKey');
+  ki.value=''; ki.placeholder=v?'saved ✓ — paste to replace':'sk-ant-…';
+  document.getElementById('wMsg').textContent=v?'Key saved in this browser ✓':'Key removed';
+}
+
+/* ---- built-in parser (no key needed) ---- */
+const DAY_TOKENS={mon:'MO',monday:'MO',tue:'TU',tues:'TU',tuesday:'TU',wed:'WE',weds:'WE',wednesday:'WE',thu:'TH',thur:'TH',thurs:'TH',thursday:'TH',fri:'FR',friday:'FR',sat:'SA',saturday:'SA',sun:'SU',sunday:'SU'};
+function parseHeuristic(text){
+  const events=[];
+  text.split(/\n|,|;|\band\b/i).map(s=>s.trim()).filter(Boolean).forEach(chunk=>{
+    let s=' '+chunk+' ', loc='', start=null, min=null;
+    const at=s.match(/@\s*(.+?)\s*$/); if(at){ loc=at[1].trim(); s=s.slice(0,at.index)+' '; }
+    const dm=s.match(/(\d+)\s*min(?:ute)?s?\b/i);
+    const dh=s.match(/(\d+(?:\.\d+)?)\s*h(?:ours?|rs?)?\b/i);
+    if(dm){ min=+dm[1]; s=s.replace(dm[0],' '); }
+    else if(dh){ min=Math.round(parseFloat(dh[1])*60); s=s.replace(dh[0],' '); }
+    const rng=s.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*(?:-|–|to)\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/i);
+    if(rng){
+      let h1=+rng[1], m1=+(rng[2]||0), h2=+rng[4], m2=+(rng[5]||0);
+      const ap1=(rng[3]||rng[6]||'').toLowerCase(), ap2=(rng[6]||'').toLowerCase();
+      if(ap1==='pm'&&h1<12)h1+=12; if(ap1==='am'&&h1===12)h1=0;
+      if(ap2==='pm'&&h2<12)h2+=12; if(ap2==='am'&&h2===12)h2=0;
+      if(h2*60+m2<=h1*60+m1)h2+=12;
+      start=`${String(h1).padStart(2,'0')}:${String(m1).padStart(2,'0')}`;
+      if(min==null) min=(h2*60+m2)-(h1*60+m1);
+      s=s.replace(rng[0],' ');
+    } else {
+      const tm=s.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i)||s.match(/\b(\d{1,2}):(\d{2})\b/);
+      if(tm){
+        let h=+tm[1], m=+(tm[2]||0); const ap=(tm[3]||'').toLowerCase();
+        if(ap==='pm'&&h<12)h+=12; if(ap==='am'&&h===12)h=0;
+        if(!ap&&h<=7)h+=12; // bare small hour → evening
+        start=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+        s=s.replace(tm[0],' ');
+      }
+    }
+    let days=[]; const low=s.toLowerCase();
+    if(/\bdaily\b|\bevery ?day\b/.test(low)) days=['MO','TU','WE','TH','FR','SA','SU'];
+    else if(/\bweekdays?\b/.test(low)) days=['MO','TU','WE','TH','FR'];
+    else Object.entries(DAY_TOKENS).forEach(([k,v])=>{ if(new RegExp('\\b'+k+'\\b','i').test(s)&&!days.includes(v)) days.push(v); });
+    const title=s.replace(/\bdaily\b|\bevery ?day\b|\bweekdays?\b/gi,' ')
+      .replace(new RegExp('\\b('+Object.keys(DAY_TOKENS).join('|')+')\\b','gi'),' ')
+      .replace(/[+&\/]/g,' ').replace(/\bat\b\s*$/i,'').replace(/\s+/g,' ').trim();
+    if(!title&&!days.length&&!start) return;
+    const hit=KNOWN.find(k=>k.kw.some(w=>low.includes(w)));
+    (days.length?days:[(hit&&hit.day)||null]).forEach(day=>{
+      let e={t:title||(hit?hit.t:''), day:day, start:start, min:min, loc:loc||(hit?hit.loc:'')};
+      if(hit){
+        const def=(e.day==='SA'&&hit.sat)?{...hit,...hit.sat}:hit;
+        if(!start)e.start=def.start||null; if(min==null)e.min=def.min||60;
+        if(title&&hit.t&&title.length<=12)e.t=def.t||hit.t; else if(!title)e.t=def.t||hit.t;
+      }
+      if(e.min==null)e.min=60;
+      if(e.t&&e.day&&e.start) events.push(e);
+    });
+  });
+  return events;
+}
+
+/* ---- Claude parser (uses the locally-saved key) ---- */
+const PLAN_SCHEMA={type:'object',additionalProperties:false,required:['events'],properties:{events:{type:'array',items:{
+  type:'object',additionalProperties:false,required:['title','day','start','minutes','location'],properties:{
+    title:{type:'string'},day:{type:'string',enum:['MO','TU','WE','TH','FR','SA','SU']},
+    start:{type:'string',description:'24h HH:MM'},minutes:{type:'integer'},location:{type:'string'}}}}}};
+async function parseWithClaude(text,key){
+  const wk=nextWeekDates();
+  const sys=`Turn the user's free-form week description into calendar events for the week starting Monday ${wk.MO.toDateString()}. `+
+    `Known regulars — fill in their defaults when the text doesn't override them: `+
+    `Femme HipHop @ Free Mind, Mondays 17:30, 75 min, 538 Johnson Ave, Brooklyn. `+
+    `Salsa @ 232 Varet St, Brooklyn: Saturdays 12:00 for 180 min, weeknights 19:00 for 120 min. `+
+    `SassClass (David), Wednesdays 19:20, 130 min, 41 W 36th St, NYC. `+
+    `Free Mind classes, 538 Johnson Ave, 75 min. Daya Yoga Yin & Sound, Sundays 19:30, 75 min, 149 Irving Ave, Brooklyn. `+
+    `Rules: start times in 24h HH:MM; default 60 minutes when duration is unstated; a mention of several days means one event per day; `+
+    `ignore anything that isn't a schedulable event; use an empty string when the location is unknown.`;
+  const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{
+      'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-opus-4-8',max_tokens:2048,system:sys,
+      output_config:{format:{type:'json_schema',schema:PLAN_SCHEMA}},
+      messages:[{role:'user',content:text}]})});
+  if(!res.ok) throw new Error('Claude API '+res.status);
+  const data=await res.json();
+  const block=(data.content||[]).find(b=>b.type==='text');
+  if(!block) throw new Error('no text in response ('+data.stop_reason+')');
+  return JSON.parse(block.text).events.map(e=>({t:e.title,day:e.day,start:e.start,min:e.minutes,loc:e.location}));
+}
+
+/* ---- propose → editable plan → calendar ---- */
+async function proposeWeek(){
+  const msg=document.getElementById('wMsg');
+  const text=document.getElementById('wPrompt').value.trim();
+  if(!text){ msg.textContent='Describe the week first ↑ (an empty week is also a choice ✓)'; return; }
+  const key=localStorage.getItem('bq.claudeKey');
+  msg.textContent=key?'Asking Claude…':'Parsing…';
+  let plan, note='';
+  if(key){
+    try{ plan=await parseWithClaude(text,key); }
+    catch(err){ plan=parseHeuristic(text); note=' · Claude call failed ('+err.message+') — used the built-in parser'; }
+  } else plan=parseHeuristic(text);
+  document.getElementById('wPlan').innerHTML='';
+  plan.forEach(e=>planRow(e));
+  document.getElementById('wActions').style.display='flex';
+  msg.textContent=plan.length?`${plan.length} event(s) proposed — check times, then add to calendar${note}`
+    :'Couldn’t find events in that — try e.g. "salsa tue 7-9pm" or add rows by hand'+note;
+}
+function planRow(e){
+  e=e||{t:'',day:'MO',start:'',min:60,loc:''};
+  const box=document.getElementById('wPlan');
+  const row=document.createElement('div'); row.className='row planrow'; row.style.marginTop='6px';
+  row.innerHTML=`<input class="p-t" placeholder="title" style="flex:2;min-width:110px">
+    <select class="p-d" style="width:auto">${['MO','TU','WE','TH','FR','SA','SU'].map(d=>`<option>${d}</option>`).join('')}</select>
+    <input class="p-s" placeholder="19:00" style="width:64px;flex:none">
+    <input class="p-m" type="number" placeholder="60" title="minutes" style="width:60px;flex:none">
+    <input class="p-l" placeholder="location" style="flex:1;min-width:90px">
+    <button class="ghost" title="add this event in Google Calendar" style="flex:none">GCal</button>
+    <button class="ghost" title="remove" style="flex:none">✕</button>`;
+  row.querySelector('.p-t').value=e.t; row.querySelector('.p-d').value=e.day||'MO';
+  row.querySelector('.p-s').value=e.start||''; row.querySelector('.p-m').value=e.min||60;
+  row.querySelector('.p-l').value=e.loc||'';
+  const [gcal,del]=row.querySelectorAll('button');
+  gcal.onclick=()=>openGcal(rowData(row));
+  del.onclick=()=>row.remove();
   box.appendChild(row);
 }
-function icsDate(d, hm){ const [h,m]=hm.split(':'); const x=new Date(d); x.setHours(+h,+m,0,0);
-  const p=n=>String(n).padStart(2,'0');
+function rowData(row){ return { t:row.querySelector('.p-t').value.trim(), day:row.querySelector('.p-d').value,
+  start:row.querySelector('.p-s').value.trim(), min:+(row.querySelector('.p-m').value||60), loc:row.querySelector('.p-l').value.trim() }; }
+function readPlan(){ return [...document.querySelectorAll('#wPlan .planrow')].map(rowData).filter(e=>e.t&&/^\d{1,2}:\d{2}$/.test(e.start)); }
+function eventTimes(e){
+  const wk=nextWeekDates(); const [h,m]=e.start.split(':');
+  const sd=new Date(wk[e.day]); sd.setHours(+h,+m,0,0);
+  const ed=new Date(sd); ed.setMinutes(ed.getMinutes()+e.min);
+  return [sd,ed];
+}
+function icsStamp(x){ const p=n=>String(n).padStart(2,'0');
   return `${x.getFullYear()}${p(x.getMonth()+1)}${p(x.getDate())}T${p(x.getHours())}${p(x.getMinutes())}00`; }
-function generateWeek(){
-  const wk=nextWeekDates(); const ev=[];
-  const monPick=MON_MENU.find(m=>m[0]===document.getElementById('wMon').value);
-  const satPick=SAT_MENU.find(m=>m[0]===document.getElementById('wSat').value);
-  [monPick,satPick].forEach(p=>{ if(p && p[2]) ev.push(p[2]); });
-  Object.entries(wSalsaSel).forEach(([k,on])=>{ if(on) ev.push({day:k,start:'19:00',min:120,loc:'232 Varet St, Brooklyn',t:'Salsa — Footwork + Partnerwork'}); });
-  [...document.getElementById('wExtras').children].forEach(row=>{
-    const [t,dsel,time,mins]=row.querySelectorAll('input,select');
-    if(t.value && time.value) ev.push({day:dsel.value,start:time.value,min:+(mins.value||60),loc:'',t:t.value});
-  });
-  if(!ev.length){ document.getElementById('wMsg').textContent='Nothing picked — an empty week is also a choice ✓'; return; }
+function openGcal(e){
+  if(!e.t||!/^\d{1,2}:\d{2}$/.test(e.start)){ document.getElementById('wMsg').textContent='That row needs a title and a HH:MM time first'; return; }
+  const [sd,ed]=eventTimes(e);
+  const url='https://calendar.google.com/calendar/render?action=TEMPLATE'
+    +'&text='+encodeURIComponent(e.t)+'&dates='+icsStamp(sd)+'/'+icsStamp(ed)
+    +'&ctz=America/New_York'+(e.loc?'&location='+encodeURIComponent(e.loc):'');
+  window.open(url,'_blank');
+}
+function downloadWeekIcs(){
+  const ev=readPlan();
+  if(!ev.length){ document.getElementById('wMsg').textContent='No complete rows — each event needs a title and a HH:MM time'; return; }
   let ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//BridgeQuarter//EN\r\n';
   ev.forEach((e,i)=>{
-    const d=wk[e.day]; const end=new Date(d); const [h,m]=e.start.split(':');
-    end.setHours(+h,+m+e.min,0,0);
-    const p=n=>String(n).padStart(2,'0');
-    const endStr=`${end.getFullYear()}${p(end.getMonth()+1)}${p(end.getDate())}T${p(end.getHours())}${p(end.getMinutes())}00`;
-    ics+=`BEGIN:VEVENT\r\nUID:bq-${Date.now()}-${i}@bridgequarter\r\nDTSTART;TZID=America/New_York:${icsDate(d,e.start)}\r\nDTEND;TZID=America/New_York:${endStr}\r\nSUMMARY:${e.t}\r\n${e.loc?'LOCATION:'+e.loc+'\r\n':''}END:VEVENT\r\n`;
+    const [sd,ed]=eventTimes(e);
+    ics+=`BEGIN:VEVENT\r\nUID:bq-${Date.now()}-${i}@bridgequarter\r\nDTSTART;TZID=America/New_York:${icsStamp(sd)}\r\nDTEND;TZID=America/New_York:${icsStamp(ed)}\r\nSUMMARY:${e.t}\r\n${e.loc?'LOCATION:'+e.loc+'\r\n':''}END:VEVENT\r\n`;
   });
   ics+='END:VCALENDAR\r\n';
   const blob=new Blob([ics],{type:'text/calendar'});
@@ -562,7 +645,7 @@ function generateWeek(){
 async function saveSunday(){
   const wkEnd=document.getElementById('sDate').value||nextSunday();
   const g=id=>document.getElementById(id).value;
-  const draft={ mon:g('wMon'), sat:g('wSat'), salsa:{...wSalsaSel} };
+  const draft={ prompt:g('wPrompt'), plan:readPlan() };
   await DB.saveSunday(wkEnd,{apps:g('sApps'),touches:g('sTouches'),mocks:g('sMocks'),lifts:g('sLifts'),
     weight:(trendWeight()||'').toString().slice(0,5),good:g('sGood'),bad:g('sBad'),top3:g('sTop3'),checks:sSel.checks,draft});
   document.getElementById('sMsg').textContent='Saved ✓ — brick laid. Now generate the week →';
