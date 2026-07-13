@@ -17,7 +17,6 @@
   body{font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);line-height:1.55}
   .wrap{max-width:1040px;margin:0 auto;padding:0 18px 90px}
   h1,h2,h3{font-family:'Fraunces',serif}
-
   header{background:linear-gradient(160deg,var(--terra) 0%,var(--terra-dark) 100%);color:var(--cream);padding:40px 20px 26px;text-align:center}
   header .kicker{text-transform:uppercase;letter-spacing:.25em;font-size:11px;font-weight:600;opacity:.85}
   header h1{font-size:clamp(32px,6vw,54px);font-weight:900;margin:6px 0 4px}
@@ -26,17 +25,14 @@
   .counter{background:rgba(251,243,231,.12);border:1px solid rgba(251,243,231,.3);border-radius:12px;padding:10px 16px;min-width:118px}
   .counter b{display:block;font-size:26px;font-family:'Fraunces',serif;font-weight:900;line-height:1.1}
   .counter span{font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;opacity:.85}
-
   nav{position:sticky;top:0;z-index:50;background:var(--terra-dark);display:flex;justify-content:center;gap:2px;padding:0 8px;overflow-x:auto}
   nav button{background:transparent;color:var(--cream);border:none;border-radius:0;padding:13px 18px;font-weight:600;font-size:14px;cursor:pointer;opacity:.75;border-bottom:3px solid transparent;white-space:nowrap}
   nav button.active{opacity:1;border-bottom-color:var(--cream)}
   nav button:hover{opacity:1;background:transparent}
-
   section.tab{display:none;margin-top:34px}
   section.tab.active{display:block}
   h2{font-size:26px;font-weight:900;color:var(--terra-dark);margin-bottom:4px}
   .lede{color:var(--grey);margin-bottom:18px;max-width:720px;font-size:14.5px}
-
   .goals{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
   .goal,.panel{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:20px}
   .goal{border-top:5px solid var(--terra);display:flex;flex-direction:column;gap:11px}
@@ -48,24 +44,22 @@
   .big{font-family:'Fraunces',serif;font-size:30px;font-weight:900;line-height:1}
   .big small{font-size:13px;font-family:'Inter';font-weight:500}
   select,input,textarea{font:inherit;padding:8px 10px;border:1.5px solid var(--sand);border-radius:10px;background:#fff;width:100%}
-  textarea{min-height:64px;resize:vertical}
+  textarea{min-height:56px;resize:vertical}
   label.f{display:block;font-size:12.5px;font-weight:600;color:var(--grey);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.06em}
   button{font:inherit;font-weight:600;background:var(--terra);color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer}
   button:hover{background:var(--terra-dark)}
   button.ghost{background:transparent;color:var(--grey);border:1.5px solid var(--sand);font-weight:500;font-size:13px}
   .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .pillrow{display:flex;gap:8px;flex-wrap:wrap}
-  .pill{border:1.5px solid var(--sand);border-radius:99px;padding:7px 14px;font-size:13.5px;cursor:pointer;background:#fff;user-select:none}
+  .pill{border:1.5px solid var(--sand);border-radius:99px;padding:8px 15px;font-size:13.5px;cursor:pointer;background:#fff;user-select:none}
   .pill.on{background:var(--terra);border-color:var(--terra);color:#fff}
+  .pill.limit.on{background:var(--green);border-color:var(--green)}
   .check{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--sand);cursor:pointer}
   .check:last-child{border-bottom:none}
   .check input{margin-top:4px;accent-color:var(--terra);width:16px;height:16px;flex:none}
   .check .done{text-decoration:line-through;color:var(--grey)}
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
   @media(max-width:780px){.cols{grid-template-columns:1fr}}
-  table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);font-size:13px}
-  th{background:var(--terra);color:var(--cream);text-align:left;padding:9px 11px;font-weight:600}
-  td{padding:8px 11px;border-top:1px solid var(--sand);vertical-align:top}
   .weights{display:flex;gap:3px;align-items:flex-end;height:52px;margin-top:8px}
   .weights div{flex:1;background:var(--sand);border-radius:3px 3px 0 0;min-width:5px}
   .weights div.latest{background:var(--terra)}
@@ -86,9 +80,14 @@
   .ok{color:var(--green);font-weight:700}
   .miss{color:#b3543c;font-weight:700}
   .stat{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:16px;text-align:center}
-  .stat b{font-family:'Fraunces',serif;font-size:30px;font-weight:900;display:block;color:var(--terra-dark)}
-  .stat span{font-size:11.5px;color:var(--grey);text-transform:uppercase;letter-spacing:.08em}
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:20px}
+  .stat b{font-family:'Fraunces',serif;font-size:26px;font-weight:900;display:block;color:var(--terra-dark)}
+  .stat i{font-style:normal;font-size:12px;color:var(--grey);display:block}
+  .stat span{font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:.08em}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px}
+  .quick{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:16px;margin-bottom:12px}
+  .quick h4{font-family:'Fraunces',serif;color:var(--terra-dark);font-size:16px;margin-bottom:8px}
+  .quick .row input,.quick .row select{width:auto;flex:1;min-width:70px}
+  .prbadge{background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;letter-spacing:.06em}
   footer{text-align:center;margin-top:60px;color:var(--grey);font-family:'Fraunces',serif;font-style:italic;font-size:14px}
   .msg{font-size:13px;color:var(--green);min-height:18px;margin-top:6px}
 </style>
@@ -96,11 +95,11 @@
 <body>
 
 <header>
-  <div class="kicker">Casa Terracotta · Q3 Lock-In</div>
+  <div class="kicker">Casa Terracotta · Q3 Lock-In · v3</div>
   <h1>The Bridge Quarter</h1>
-  <div class="sub">July 7 – October 31, 2026 · Same Tatiana, less self-abandonment.</div>
+  <div class="sub">July 13 – October 31, 2026 · Restarted, sustainably. Same Tatiana, less self-abandonment.</div>
   <div class="counters">
-    <div class="counter"><b id="dayNum">–</b><span>Day of 117</span></div>
+    <div class="counter"><b id="dayNum">–</b><span>Day of 111</span></div>
     <div class="counter"><b id="toSept">–</b><span>To offer target</span></div>
     <div class="counter"><b id="toEnd">–</b><span>Buffer days left</span></div>
     <div class="counter"><b id="streakBig">–</b><span>Streak (limit held)</span></div>
@@ -112,14 +111,14 @@
   <button data-tab="daily">Daily check-in</button>
   <button data-tab="sunday">Sunday review</button>
   <button data-tab="photos">Progress pics</button>
-  <button data-tab="proof">Tangibles</button>
+  <button data-tab="audit">Tangibles</button>
 </nav>
 
 <div class="wrap">
 <div id="modeBanner"></div>
 <div id="authCard" class="auth panel" style="display:none">
   <h3 style="color:var(--terra-dark);margin-bottom:8px">Sign in</h3>
-  <p style="font-size:13.5px;color:var(--grey);margin-bottom:12px">Magic link, no password — same as the study planner.</p>
+  <p style="font-size:13.5px;color:var(--grey);margin-bottom:12px">Magic link, no password.</p>
   <div class="row"><input type="email" id="authEmail" placeholder="type your email" autocomplete="email"><button onclick="sendLink()">Send link</button></div>
   <div class="msg" id="authMsg"></div>
 </div>
@@ -129,7 +128,7 @@
 <!-- ================= DASHBOARD ================= -->
 <section class="tab active" id="tab-dash">
   <h2>The Four</h2>
-  <p class="lede">Everything on the calendar exists to make these four true.</p>
+  <p class="lede">Day 1 was July 13. The finish line didn't move: offers in September, October is buffer.</p>
   <div class="goals">
     <div class="goal">
       <div class="num">01 · CAREER</div>
@@ -140,22 +139,22 @@
         <option>Onsites</option><option>Offer in hand</option><option>OFFER SIGNED 🎉</option>
       </select>
       <div class="bar"><i id="offerBar" style="width:8%"></i></div>
-      <small>Target: <b>September</b>. October is buffer. Quotas live in the tracker + Sunday review.</small>
+      <small>Container 9:30–11:30 · study 2h · quotas in the tracker. Four real hours beat five resented ones.</small>
     </div>
     <div class="goal">
       <div class="num">02 · BODY</div>
       <h3>Reach 125</h3>
-      <div class="big"><span id="curWeight">—</span><small> lbs · 7-day trend</small></div>
+      <div class="big"><span id="curWeight">—</span><small> lbs · 7-entry trend</small></div>
       <div class="bar"><i id="weightBar" style="width:0%"></i></div>
       <div class="weights" id="wChart"></div>
-      <small>Log weight in the daily check-in. 135 → <b>125</b> ≈ 0.6 lb/wk. Trend dropping &gt;1.25 lb/wk = eat more.</small>
+      <small>Weight logs live in Tangibles now. 3 midday lifts + near-daily easy runs. Trend dropping &gt;1.25 lb/wk = eat more.</small>
     </div>
     <div class="goal">
       <div class="num">03 · REGULATION</div>
       <h3>Never past the limit</h3>
       <div class="big"><span id="streakDays">–</span><small> days</small></div>
       <div class="bar"><i id="streakBar" style="width:0%"></i></div>
-      <small>The limit: <b>2 drinks</b>, trusted company only. Streak computes from your daily check-ins — a logged slip restarts it; honesty is the practice.</small>
+      <small>"Within the limit" is a daily habit checkbox now — unchecking it on a saved day restarts the streak. Honesty is the practice.</small>
     </div>
     <div class="goal">
       <div class="num">04 · VEUWE</div>
@@ -163,7 +162,7 @@
       <div class="big"><span id="pitchPct">0%</span><small> pitch-ready</small></div>
       <div class="bar"><i id="pitchBar" style="width:0%"></i></div>
       <div id="pitchList"></div>
-      <small>Deck prep from Oct 1; outreach the week the offer signs. Pitch employed, not panicked.</small>
+      <small>Deck prep from Oct 1; outreach the week the offer signs.</small>
     </div>
   </div>
 
@@ -171,17 +170,15 @@
     <h2>Everything, one tap away</h2>
     <div class="links">
       <a class="link" href="https://study-planner-tawny-seven.vercel.app/"><b>⚡ Study Planner</b><span>every career task</span></a>
-      <a class="link" href="https://calendar.google.com/calendar/u/0/r/week"><b>📅 Google Calendar</b><span>the daily schedule</span></a>
+      <a class="link" href="https://calendar.google.com/calendar/u/0/r/week"><b>📅 Google Calendar</b><span>the weekly clock</span></a>
       <a class="link" href="https://github.com/tatitasantita23/social-closet"><b>VEUWE repo</b><span>PR-review trail</span></a>
       <a class="link" href="https://www.tryexponent.com/"><b>Exponent</b><span>live mocks</span></a>
       <a class="link" href="https://devinterview.ai"><b>devinterview.ai</b><span>AI mock reps</span></a>
       <a class="link" href="https://www.linkedin.com/jobs/"><b>LinkedIn Jobs</b><span>container hours only</span></a>
-      <a class="link" href="https://wellfound.com/"><b>Wellfound</b><span>founding cluster</span></a>
-      <a class="link" href="https://www.levels.fyi/"><b>levels.fyi</b><span>September only</span></a>
-      <a class="link" href="https://www.instagram.com/nycsalsadancer"><b>NYC Salsa Dance</b><span>Sat 12–3 anchor</span></a>
-      <a class="link" href="https://freemindthestudioclasses.as.me/bookaclass"><b>Free Mind</b><span>Femme HipHop Mon 5:30</span></a>
-      <a class="link" href="https://www.sassclassnyc.com/classes"><b>SassClass</b><span>Wed David double</span></a>
-      <a class="link" href="https://dayayoga.studiogrowth.com/schedule?locations=14"><b>Daya Yoga</b><span>Sun 7:30 Yin</span></a>
+      <a class="link" href="https://freemindthestudioclasses.as.me/bookaclass"><b>Free Mind</b><span>book Monday's pick</span></a>
+      <a class="link" href="https://www.sassclassnyc.com/classes"><b>SassClass</b><span>Midtown menu</span></a>
+      <a class="link" href="https://www.instagram.com/nycsalsadancer"><b>NYC Salsa Dance</b><span>Tue/Thu/Sat, walk-in</span></a>
+      <a class="link" href="https://dayayoga.studiogrowth.com/schedule?locations=14"><b>Daya Yoga</b><span>optional Sunday yin</span></a>
     </div>
   </section>
 </section>
@@ -189,20 +186,14 @@
 <!-- ================= DAILY ================= -->
 <section class="tab" id="tab-daily">
   <h2>Daily check-in</h2>
-  <p class="lede">Ninety seconds, once a day — ideally at the evening Review &amp; Quiz. The streak, the trend line, and the Sunday review all read from here.</p>
+  <p class="lede">Sixty seconds: the habits row, nothing else. Numbers go in Tangibles; this is just "did today happen the way I intend to live."</p>
   <div class="cols">
     <div class="panel">
       <label class="f">Date</label>
       <input type="date" id="dDate">
-      <label class="f">7-day habits</label>
+      <label class="f">The habits</label>
       <div class="pillrow" id="dHabits"></div>
-      <label class="f">Training done today</label>
-      <div class="pillrow" id="dTraining"></div>
-      <label class="f">Drinks</label>
-      <div class="pillrow" id="dDrinks"></div>
-      <label class="f">Trend weight (optional, morning)</label>
-      <input type="number" step="0.1" id="dWeight" placeholder="e.g. 133.4">
-      <label class="f">One line about today</label>
+      <label class="f">One line (optional)</label>
       <textarea id="dNote" placeholder="what regulated you, what activated you, one win"></textarea>
       <div class="row" style="margin-top:12px"><button onclick="saveDaily()">Save check-in</button><div class="msg" id="dMsg"></div></div>
     </div>
@@ -215,30 +206,44 @@
 
 <!-- ================= SUNDAY ================= -->
 <section class="tab" id="tab-sunday">
-  <h2>🧱 Sunday review</h2>
-  <p class="lede">30 minutes, sacred. Read from the planner, the tracker, and GitHub — never memory. Standing item: offers in <b>September</b>; October is buffer.</p>
+  <h2>🧱 Sunday review + next week's plan</h2>
+  <p class="lede">30 minutes: score the week from real sources, then DRAFT next week — and send it to Google Calendar with one tap.</p>
   <div class="cols">
     <div class="panel">
+      <h3 style="color:var(--terra-dark);margin-bottom:8px">1 · Score the week</h3>
       <label class="f">Week ending (Sunday)</label>
       <input type="date" id="sDate">
       <div class="cols" style="gap:10px">
-        <div><label class="f">Applications sent (10–15)</label><input type="number" id="sApps"></div>
+        <div><label class="f">Apps sent (10–15)</label><input type="number" id="sApps"></div>
         <div><label class="f">Warm touches (5)</label><input type="number" id="sTouches"></div>
-        <div><label class="f">Mocks / live reps</label><input type="number" id="sMocks"></div>
+        <div><label class="f">Mocks / reps</label><input type="number" id="sMocks"></div>
         <div><label class="f">Lifts (of 3)</label><input type="number" id="sLifts"></div>
-        <div><label class="f">Runs (of 2)</label><input type="number" id="sRuns"></div>
-        <div><label class="f">Trend weight</label><input type="number" step="0.1" id="sWeight"></div>
       </div>
       <label class="f">One moment I regulated well</label><textarea id="sGood"></textarea>
       <label class="f">One moment I didn't (data, not judgment)</label><textarea id="sBad"></textarea>
       <label class="f">Top 3 for next week</label><textarea id="sTop3"></textarea>
-      <label class="f">Checks</label>
+      <label class="f">Standing checks</label>
       <div class="pillrow" id="sChecks"></div>
       <div class="row" style="margin-top:12px"><button onclick="saveSunday()">Save review</button><div class="msg" id="sMsg"></div></div>
+      <h3 style="color:var(--terra-dark);margin:18px 0 8px">Past reviews <span id="revCount" style="font-size:13px;color:var(--grey)"></span></h3>
+      <div id="sundayLog" class="day-log"></div>
     </div>
     <div class="panel">
-      <h3 style="color:var(--terra-dark);margin-bottom:10px">Past reviews <span id="revCount" style="font-size:13px;color:var(--grey)"></span></h3>
-      <div id="sundayLog" class="day-log"></div>
+      <h3 style="color:var(--terra-dark);margin-bottom:8px">2 · Draft next week → calendar</h3>
+      <label class="f">Monday dance window</label>
+      <select id="wMon"></select>
+      <label class="f">Saturday dance window</label>
+      <select id="wSat"></select>
+      <label class="f">Weeknight salsa adds (Varet St, 7–9pm)</label>
+      <div class="pillrow" id="wSalsa"></div>
+      <label class="f">Extra events (interviews, mocks, plans)</label>
+      <div id="wExtras"></div>
+      <button class="ghost" onclick="addExtraRow()" style="margin-top:6px">+ add another</button>
+      <div class="row" style="margin-top:14px">
+        <button onclick="generateWeek()">⬇ Generate week (.ics for Google Calendar)</button>
+      </div>
+      <div class="msg" id="wMsg"></div>
+      <small>Downloads a calendar file with only the events you picked. Open it (tap on phone / double-click on Mac) → it lands in Google Calendar on top of the standing weekly clock. Then book the classes: Free Mind pre-reg, SassClass MindBody, salsa walk-in.</small>
     </div>
   </div>
 </section>
@@ -246,7 +251,7 @@
 <!-- ================= PHOTOS ================= -->
 <section class="tab" id="tab-photos">
   <h2>Progress pics</h2>
-  <p class="lede">Daily or whenever — the camera sees what the scale hides. Milestone sets: <b>Jul 7 · Aug 15 · Oct 1 · Oct 31</b>. Photos live in a private bucket only you can access.</p>
+  <p class="lede">Milestone sets: <b>Jul 13 (new baseline) · Aug 15 · Oct 1 · Oct 31</b> — plus any day you feel like it. Private bucket, your eyes only.</p>
   <div class="panel" style="margin-bottom:18px">
     <div class="row">
       <input type="file" id="picFile" accept="image/*" capture="environment" style="flex:1">
@@ -257,90 +262,98 @@
   <div class="grid-pics" id="picGrid"></div>
 </section>
 
-<!-- ================= TANGIBLES ================= -->
-<section class="tab" id="tab-proof">
-  <h2>Tangibles — measurable proof</h2>
-  <p class="lede">Numbers that prove it happened. Some count themselves from your check-ins; the rest you log as they land.</p>
-  <div class="stats">
-    <div class="stat"><b id="pStreak">–</b><span>day streak</span></div>
-    <div class="stat"><b id="pCheckins">–</b><span>check-ins logged</span></div>
-    <div class="stat"><b id="pReviews">–</b><span>Sunday reviews</span></div>
-    <div class="stat"><b id="pLifts">–</b><span>lifts this quarter</span></div>
-    <div class="stat"><b id="pMocks">–</b><span>mocks (logged)</span></div>
-    <div class="stat"><b id="pPRs">–</b><span>reviewed PRs</span></div>
-  </div>
+<!-- ================= TANGIBLES / AUDIT ================= -->
+<section class="tab" id="tab-audit">
+  <h2>Tangibles — the audit log</h2>
+  <p class="lede">Everything recordable lands here: weight, lift sets, run times, measurements, career reps. If it can be measured, it gets a row — this is what "on track" looks like in numbers.</p>
+  <div class="stats" id="auditStats"></div>
+
   <div class="cols">
-    <div class="panel">
-      <h3 style="color:var(--terra-dark);margin-bottom:8px">Log proof</h3>
-      <label class="f">Kind</label>
-      <select id="prKind">
-        <option>Squat PR (lbs)</option><option>Hip thrust PR (lbs)</option>
-        <option>Mock completed</option><option>PR reviewed by Ngozi (GitHub)</option>
-        <option>Application milestone (e.g. 30th sent)</option>
-        <option>Waist (in)</option><option>Hips (in)</option>
-        <option>Salsa milestone</option><option>Other</option>
-      </select>
-      <label class="f">Value</label><input id="prValue" placeholder="e.g. 185, or 'passed with hire'">
-      <label class="f">Date</label><input type="date" id="prDate">
-      <label class="f">Note (optional)</label><input id="prNote">
-      <div class="row" style="margin-top:12px"><button onclick="addProof()">Log it</button><div class="msg" id="prMsg"></div></div>
+    <div>
+      <div class="quick">
+        <h4>⚖️ Weight</h4>
+        <div class="row"><input type="number" step="0.1" id="qW" placeholder="lbs"><button onclick="logQuick('weight','weight',qv('qW'),'lb')">Log</button></div>
+      </div>
+      <div class="quick">
+        <h4>🏃 Run</h4>
+        <div class="row"><input type="number" step="0.01" id="qRd" placeholder="miles"><input id="qRt" placeholder="time (mm:ss)"><button onclick="logRun()">Log</button></div>
+      </div>
+      <div class="quick">
+        <h4>🏋️ Lift set (top set of the day)</h4>
+        <div class="row">
+          <select id="qLex"><option>Hip thrust</option><option>Squat</option><option>RDL</option><option>Bulgarian split squat</option><option>Row</option><option>Press</option><option>Other</option></select>
+          <input type="number" id="qLw" placeholder="lbs"><input type="number" id="qLr" placeholder="reps"><button onclick="logLift()">Log</button>
+        </div>
+      </div>
+      <div class="quick">
+        <h4>📏 Measurement</h4>
+        <div class="row">
+          <select id="qMk"><option>Waist</option><option>Hips</option><option>Thigh</option><option>Arm</option></select>
+          <input type="number" step="0.1" id="qMv" placeholder="inches"><button onclick="logQuick('measure',document.getElementById('qMk').value,qv('qMv'),'in')">Log</button>
+        </div>
+      </div>
+      <div class="quick">
+        <h4>💼 Career rep</h4>
+        <div class="row">
+          <select id="qCk"><option>Mock completed</option><option>PR reviewed by Ngozi</option><option>Screen done</option><option>Onsite done</option></select>
+          <button onclick="logQuick('career',document.getElementById('qCk').value,1,'rep')">Log</button>
+        </div>
+      </div>
+      <div class="quick">
+        <h4>✨ Anything else</h4>
+        <div class="row"><input id="qXk" placeholder="what (e.g. salsa social, 8k steps)"><input id="qXv" placeholder="value (optional)"><button onclick="logCustom()">Log</button></div>
+      </div>
     </div>
     <div class="panel">
       <h3 style="color:var(--terra-dark);margin-bottom:8px">The record</h3>
-      <div id="proofLog" class="day-log"></div>
+      <div id="auditLog" class="day-log"></div>
     </div>
   </div>
 </section>
 
 </div><!-- /app -->
-<footer><p>Brick by brick. In due season we will reap, if we do not give up. — Gal 6:9</p></footer>
+<footer><p>Brick by brick — at a pace you can keep. In due season we will reap, if we do not give up. — Gal 6:9</p></footer>
 </div>
 
 <script>
-/* ============ CONFIG — paste your Supabase project values here ============ */
+/* ============ CONFIG ============ */
 const CONFIG = {
   SUPABASE_URL: "https://qvywfkirupxfrdoiqonr.supabase.co",
-  SUPABASE_ANON_KEY: "sb_publishable_mWms85NlQEafOhVcvItbpg_1131Rpfz" // publishable key — safe in browser; RLS protects rows
+  SUPABASE_ANON_KEY: "sb_publishable_mWms85NlQEafOhVcvItbpg_1131Rpfz"
 };
-/* ========================================================================= */
-
-const START = new Date('2026-07-07T00:00:00');
+/* ================================ */
+const START = new Date('2026-07-13T00:00:00');
 const SEPT  = new Date('2026-09-30T23:59:59');
 const END   = new Date('2026-10-31T23:59:59');
-const TOTAL = 117;
+const TOTAL = 111, WEEKS = 16;
 const day = ms => Math.floor(ms / 86400000);
 const todayISO = () => new Date().toISOString().slice(0,10);
 const cloud = !!(CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY);
 const sb = cloud ? supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY) : null;
 let user = null;
 
-/* ---------- local fallback store ---------- */
-const LKEY = 'bridgeQuarterV2';
+const LKEY = 'bridgeQuarterV3';
 const L = JSON.parse(localStorage.getItem(LKEY) || '{}');
-L.state ||= {}; L.daily ||= {}; L.sunday ||= {}; L.proof ||= [];
+L.state ||= {}; L.daily ||= {}; L.sunday ||= {}; L.audit ||= [];
 const lsave = () => localStorage.setItem(LKEY, JSON.stringify(L));
 
-/* ---------- data layer (cloud or local) ---------- */
 const DB = {
   async getState(){ if(!cloud) return L.state;
-    const {data} = await sb.from('bq_state').select('data').eq('user_id',user.id).maybeSingle();
-    return data?.data || {}; },
+    const {data} = await sb.from('bq_state').select('data').eq('user_id',user.id).maybeSingle(); return data?.data || {}; },
   async saveState(s){ if(!cloud){ L.state=s; lsave(); return; }
     await sb.from('bq_state').upsert({user_id:user.id, data:s, updated_at:new Date()}); },
   async listDaily(){ if(!cloud) return Object.entries(L.daily).map(([day,data])=>({day,data})).sort((a,b)=>a.day<b.day?1:-1);
-    const {data} = await sb.from('bq_daily').select('day,data').eq('user_id',user.id).order('day',{ascending:false}).limit(180);
-    return data||[]; },
-  async saveDaily(dayKey,d){ if(!cloud){ L.daily[dayKey]=d; lsave(); return; }
-    await sb.from('bq_daily').upsert({user_id:user.id, day:dayKey, data:d, updated_at:new Date()}); },
+    const {data} = await sb.from('bq_daily').select('day,data').eq('user_id',user.id).order('day',{ascending:false}).limit(180); return data||[]; },
+  async saveDaily(k,d){ if(!cloud){ L.daily[k]=d; lsave(); return; }
+    await sb.from('bq_daily').upsert({user_id:user.id, day:k, data:d, updated_at:new Date()}); },
   async listSunday(){ if(!cloud) return Object.entries(L.sunday).map(([week_ending,data])=>({week_ending,data})).sort((a,b)=>a.week_ending<b.week_ending?1:-1);
-    const {data} = await sb.from('bq_sunday').select('week_ending,data').eq('user_id',user.id).order('week_ending',{ascending:false});
-    return data||[]; },
+    const {data} = await sb.from('bq_sunday').select('week_ending,data').eq('user_id',user.id).order('week_ending',{ascending:false}); return data||[]; },
   async saveSunday(wk,d){ if(!cloud){ L.sunday[wk]=d; lsave(); return; }
     await sb.from('bq_sunday').upsert({user_id:user.id, week_ending:wk, data:d, updated_at:new Date()}); },
-  async listProof(){ if(!cloud) return L.proof.slice().sort((a,b)=>a.day<b.day?1:-1);
-    const {data} = await sb.from('bq_proof').select('*').eq('user_id',user.id).order('day',{ascending:false});
-    return data||[]; },
-  async addProof(p){ if(!cloud){ L.proof.push({...p, id:Date.now()+''}); lsave(); return; }
+  // audit rows reuse bq_proof: kind = "category|metric|unit", value = number-as-text, note = extra JSON or text
+  async listAudit(){ if(!cloud) return L.audit.slice().sort((a,b)=>a.day<b.day?1:(a.created<b.created?1:-1));
+    const {data} = await sb.from('bq_proof').select('*').eq('user_id',user.id).order('day',{ascending:false}).order('created_at',{ascending:false}).limit(500); return data||[]; },
+  async addAudit(p){ if(!cloud){ L.audit.push({...p, id:Date.now()+'', created:new Date().toISOString()}); lsave(); return; }
     await sb.from('bq_proof').insert({...p, user_id:user.id}); },
 };
 
@@ -350,8 +363,8 @@ async function sendLink(){
   const email = document.getElementById('authEmail').value.trim();
   if(!email){ msg.textContent = 'Type your email in the box first ↑'; return; }
   msg.textContent = 'Sending…';
-  const {error} = await sb.auth.signInWithOtp({email, options:{emailRedirectTo: 'https://tatitasantita23.github.io/bridge-quarter/'}});
-  msg.textContent = error ? error.message : 'Link sent — check your email ✓ (and spam, the first time)';
+  const {error} = await sb.auth.signInWithOtp({email, options:{emailRedirectTo:'https://tatitasantita23.github.io/bridge-quarter/'}});
+  msg.textContent = error ? error.message : 'Link sent — check your email ✓';
 }
 async function boot(){
   if(cloud){
@@ -362,66 +375,73 @@ async function boot(){
     document.getElementById('app').style.display = user ? 'block' : 'none';
     if(!user){ renderHeader([]); return; }
   } else {
-    document.getElementById('modeBanner').innerHTML =
-      '<div class="banner">⚠️ <b>Local mode</b> — data stays in this browser and photos are disabled. To sync across devices + enable pics: run <code>supabase-schema.sql</code>, paste your project URL + anon key into CONFIG at the top of this file, redeploy. See DEPLOY.md.</div>';
+    document.getElementById('modeBanner').innerHTML = '<div class="banner">⚠️ <b>Local mode</b> — no sync, no photos.</div>';
   }
   await refreshAll();
 }
 
-/* ---------- header + dashboard ---------- */
-let cacheDaily = [], cacheState = {}, cacheSunday = [], cacheProof = [];
+/* ---------- caches ---------- */
+let cacheDaily=[], cacheState={}, cacheSunday=[], cacheAudit=[];
 
+/* ---------- parse audit rows ---------- */
+function parseAudit(r){
+  const [category='', metric='', unit=''] = (r.kind||'').split('|');
+  let extra = {}; try { extra = r.note ? JSON.parse(r.note) : {}; } catch(e){ extra = {note:r.note}; }
+  return { id:r.id, day:r.day, category, metric, unit, value:parseFloat(r.value), raw:r.value, extra };
+}
+const audits = (cat) => cacheAudit.map(parseAudit).filter(a => !cat || a.category===cat);
+
+/* ---------- header + streak + weight ---------- */
+function calcStreak(daily){
+  const slip = daily.find(r => r.data?.habits && r.data.habits.limit === false);
+  const from = slip ? new Date(slip.day+'T00:00:00') : START;
+  return Math.max(0, day(new Date() - from));
+}
+function trendWeight(){
+  const w = audits('weight').slice(0,7).map(a=>a.value).filter(v=>!isNaN(v));
+  return w.length ? w.reduce((a,b)=>a+b,0)/w.length : null;
+}
 function renderHeader(daily){
   const now = new Date();
   const dayNum = Math.min(TOTAL, Math.max(0, day(now - START) + 1));
   document.getElementById('dayNum').textContent = now < START ? '0' : dayNum;
   document.getElementById('toSept').textContent = Math.max(0, day(SEPT - now));
   document.getElementById('toEnd').textContent  = Math.max(0, day(END - now));
-  const streak = calcStreak(daily);
-  document.getElementById('streakBig').textContent = streak;
+  document.getElementById('streakBig').textContent = calcStreak(daily);
 }
-function calcStreak(daily){
-  const lastSlip = daily.find(r => r.data.drinks === 'over');
-  const from = lastSlip ? new Date(lastSlip.day+'T00:00:00') : START;
-  return Math.max(0, day(new Date() - from));
-}
-function trendWeight(daily){
-  const w = daily.filter(r=>r.data.weight).slice(0,7).map(r=>+r.data.weight);
-  return w.length ? w.reduce((a,b)=>a+b,0)/w.length : null;
-}
+
+/* ---------- dashboard ---------- */
 const stages = ['Applying','Screens live','Tech rounds','Onsites','Offer in hand','OFFER SIGNED 🎉'];
 async function setOffer(v){ cacheState.offer = v; await DB.saveState(cacheState); renderDash(); }
 const pitchItems = [
   ['demo','Demo runs on the first try'],
   ['walk','Walkthrough choreographed (15 min, repo-verified)'],
   ['prs','8+ PRs with Ngozi\'s reviews on GitHub'],
-  ['deck','Pitch deck v1 (Oct 1 — built from the walkthrough)'],
-  ['pipeline','Investor pipeline (10+ names, warm intros mapped)'],
-  ['outreach','Outreach begun (week after the offer signs)'],
-  ['meeting','First pitch meeting held — being pitched ✓'],
+  ['deck','Pitch deck v1 (Oct 1)'],
+  ['pipeline','Investor pipeline (10+ names)'],
+  ['outreach','Outreach begun (post-offer)'],
+  ['meeting','First pitch meeting — being pitched ✓'],
 ];
 function renderDash(){
   const offer = cacheState.offer || 'Applying';
   document.getElementById('offerStage').textContent = offer;
   document.getElementById('offerSelect').value = offer;
   document.getElementById('offerBar').style.width = ((stages.indexOf(offer)+1)/stages.length*100)+'%';
-
-  const t = trendWeight(cacheDaily);
+  const t = trendWeight();
   document.getElementById('curWeight').textContent = t ? t.toFixed(1) : '—';
   document.getElementById('weightBar').style.width = t ? Math.min(100,Math.max(0,(135-t)/10*100))+'%' : '0%';
   const chart = document.getElementById('wChart'); chart.innerHTML='';
-  const recent = cacheDaily.filter(r=>r.data.weight).slice(0,21).reverse();
+  const recent = audits('weight').slice(0,21).reverse();
   if(recent.length){
-    const vals = recent.map(r=>+r.data.weight);
+    const vals = recent.map(a=>a.value);
     const min = Math.min(...vals,124), max = Math.max(...vals,136);
-    recent.forEach((r,i)=>{ const d=document.createElement('div');
-      d.style.height=(8+(+r.data.weight-min)/(max-min||1)*44)+'px'; d.title=`${r.day}: ${r.data.weight}`;
+    recent.forEach((a,i)=>{ const d=document.createElement('div');
+      d.style.height=(8+(a.value-min)/(max-min||1)*44)+'px'; d.title=`${a.day}: ${a.value}`;
       if(i===recent.length-1)d.className='latest'; chart.appendChild(d); });
   }
   const streak = calcStreak(cacheDaily);
   document.getElementById('streakDays').textContent = streak;
   document.getElementById('streakBar').style.width = Math.min(100,streak/TOTAL*100)+'%';
-
   const box = document.getElementById('pitchList'); box.innerHTML=''; let done=0;
   const p = cacheState.pitch || {};
   pitchItems.forEach(([k,label])=>{
@@ -437,99 +457,156 @@ function renderDash(){
   renderHeader(cacheDaily);
 }
 
-/* ---------- daily tab ---------- */
-const HABITS=[['reg','10-min regulation'],['protein','120g protein'],['steps','8k steps'],['phone','phone rule held']];
-const TRAIN=[['lift','Lift'],['run','Run'],['dance','Dance'],['rest','Rest day']];
-const DRINKS=[['none','None'],['within','1–2 (within limit)'],['over','Over the limit']];
-let dSel={habits:{},training:{},drinks:'none'};
-function pillbar(elId, items, sel, single){
+/* ---------- daily ---------- */
+const HABITS=[['reg','10-min regulation'],['protein','120g protein'],['phone','phone rule held'],['container','container closed on time'],['study','study block done'],['limit','WITHIN THE LIMIT']];
+let dSel={habits:{limit:true}};
+function pillbar(elId, items, sel){
   const el=document.getElementById(elId); el.innerHTML='';
   items.forEach(([k,label])=>{
-    const b=document.createElement('div'); b.className='pill'; b.textContent=label;
-    const on = single ? sel.value===k : !!sel[k];
-    if(on) b.classList.add('on');
-    b.onclick=()=>{ if(single){sel.value=k;} else {sel[k]=!sel[k];} pillbar(elId,items,sel,single); };
+    const b=document.createElement('div'); b.className='pill'+(k==='limit'?' limit':''); b.textContent=label;
+    if(sel[k]) b.classList.add('on');
+    b.onclick=()=>{ sel[k]=!sel[k]; pillbar(elId,items,sel); };
     el.appendChild(b);
   });
 }
 function drawDailyForm(){
   document.getElementById('dDate').value = todayISO();
-  pillbar('dHabits',HABITS,dSel.habits,false);
-  pillbar('dTraining',TRAIN,dSel.training,false);
-  dSel.drinksSel={value:dSel.drinks};
-  pillbar('dDrinks',DRINKS,dSel.drinksSel,true);
+  pillbar('dHabits',HABITS,dSel.habits);
 }
 async function saveDaily(){
   const d = document.getElementById('dDate').value || todayISO();
-  const data = {
-    habits: dSel.habits, training: dSel.training,
-    drinks: dSel.drinksSel.value,
-    weight: document.getElementById('dWeight').value || null,
-    note: document.getElementById('dNote').value || ''
-  };
-  if(data.drinks==='over' && !confirm('Logging over the limit — the streak restarts. Honesty is the practice. Save?')) return;
-  await DB.saveDaily(d, data);
+  const habits = {...dSel.habits}; habits.limit = !!habits.limit;
+  if(!habits.limit && !confirm('Saving with WITHIN THE LIMIT unchecked = a slip is logged and the streak restarts. Honesty is the practice. Save?')) return;
+  await DB.saveDaily(d, { habits, note: document.getElementById('dNote').value || '' });
   document.getElementById('dMsg').textContent='Saved ✓';
   setTimeout(()=>document.getElementById('dMsg').textContent='',2000);
-  document.getElementById('dWeight').value=''; document.getElementById('dNote').value='';
-  dSel={habits:{},training:{},drinks:'none'}; drawDailyForm();
+  document.getElementById('dNote').value='';
+  dSel={habits:{limit:true}}; drawDailyForm();
   await refreshAll();
 }
 function renderDailyLog(){
   const el=document.getElementById('dailyLog'); el.innerHTML='';
   cacheDaily.slice(0,14).forEach(r=>{
-    const h=r.data.habits||{}, t=r.data.training||{};
-    const habits=HABITS.map(([k,l])=>h[k]?'✓':'·').join(' ');
-    const train=TRAIN.filter(([k])=>t[k]).map(([,l])=>l).join(', ')||'—';
-    const drink=r.data.drinks==='over'?'<span class="miss">OVER</span>':r.data.drinks==='within'?'1–2':'0';
+    const h=r.data.habits||{};
+    const marks=HABITS.map(([k,l])=> k==='limit' ? (h[k]?'<span class="ok">✓limit</span>':'<span class="miss">SLIP</span>') : (h[k]?'✓':'·')).join(' ');
     const div=document.createElement('div');
     div.style.cssText='padding:8px 0;border-bottom:1px dashed var(--sand)';
-    div.innerHTML=`<span class="d">${r.day.slice(5)}</span> · habits ${habits} · ${train} · drinks ${drink}${r.data.weight?' · '+r.data.weight+' lb':''}${r.data.note?'<br><span style="color:var(--grey)">'+r.data.note+'</span>':''}`;
+    div.innerHTML=`<span class="d">${r.day.slice(5)}</span> · ${marks}${r.data.note?'<br><span style="color:var(--grey)">'+r.data.note+'</span>':''}`;
     el.appendChild(div);
   });
-  if(!cacheDaily.length) el.innerHTML='<span style="color:var(--grey)">No check-ins yet. Day 1 is a good day to start.</span>';
+  if(!cacheDaily.length) el.innerHTML='<span style="color:var(--grey)">Day 1 is today. Sixty seconds.</span>';
 }
 
-/* ---------- sunday tab ---------- */
-const SCHECKS=[['review30','30 min held'],['closeout','planner close-out run'],['freemind','Free Mind Sat checked'],['september','September framing said out loud']];
+/* ---------- sunday review + week generator ---------- */
+const SCHECKS=[['september','September framing said aloud'],['zero','Sunday stayed zero'],['booked','next week\'s classes BOOKED'],['followups','follow-ups queued']];
 let sSel={checks:{}};
 function nextSunday(){ const d=new Date(); d.setDate(d.getDate()+(7-d.getDay())%7); return d.toISOString().slice(0,10); }
+function nextWeekDates(){ // Mon..Sun after the upcoming Sunday-of-review (i.e., the week being planned)
+  const now=new Date(); const dow=now.getDay(); // 0=Sun
+  const mon=new Date(now); mon.setDate(now.getDate() + ((8-dow)%7 || 7)); // next Monday strictly after today, unless today IS Monday → plan THIS week
+  if(dow===1) mon.setDate(now.getDate()); // Monday: plan the running week
+  const out={}; ['MO','TU','WE','TH','FR','SA','SU'].forEach((k,i)=>{ const d=new Date(mon); d.setDate(mon.getDate()+i); out[k]=d; });
+  return out;
+}
+const MON_MENU = [
+  ['none','— leave empty —',null],
+  ['ffh','Femme HipHop @ Free Mind 5:30–6:45',{day:'MO',start:'17:30',min:75,loc:'538 Johnson Ave, Brooklyn',t:'Femme HipHop @ Free Mind (leave Ngozi\'s 4:30 · pre-register!)'}],
+  ['fm7','Free Mind 7:00 class (Disney/varies)',{day:'MO',start:'19:00',min:75,loc:'538 Johnson Ave, Brooklyn',t:'Free Mind 7pm class (pre-register)'}],
+  ['fm830','Free Mind 8:30 class (House/varies)',{day:'MO',start:'20:30',min:75,loc:'538 Johnson Ave, Brooklyn',t:'Free Mind 8:30 class (pre-register)'}],
+  ['ssj','SassClass — David Sultry Street Jazz 8:30',{day:'MO',start:'20:30',min:60,loc:'41 W 36th St, NYC',t:'SassClass — Sultry Street Jazz (David)'}],
+];
+const SAT_MENU = [
+  ['none','— leave empty —',null],
+  ['salsa','Salsa 12–3 @ Varet St (default)',{day:'SA',start:'12:00',min:180,loc:'232 Varet St, Brooklyn',t:'Salsa — Styling + Int. Footwork + Partnerwork'}],
+  ['salsa2','Salsa 12–2 (skip partnerwork)',{day:'SA',start:'12:00',min:120,loc:'232 Varet St, Brooklyn',t:'Salsa — Styling + Int. Footwork'}],
+  ['fmreg','Free Mind Sat Reggaeton (check time when posted)',{day:'SA',start:'12:00',min:75,loc:'538 Johnson Ave, Brooklyn',t:'Free Mind — Sat Reggaeton (confirm time!)'}],
+  ['sass','SassClass Sat afternoon (FFHH 3pm / Twerk 4:25)',{day:'SA',start:'15:00',min:60,loc:'41 W 36th St, NYC',t:'SassClass — Saturday class'}],
+];
+let wSalsaSel={};
 function drawSundayForm(){
   document.getElementById('sDate').value = nextSunday();
-  pillbar('sChecks',SCHECKS,sSel.checks,false);
-  const t=trendWeight(cacheDaily); if(t) document.getElementById('sWeight').value=t.toFixed(1);
+  pillbar('sChecks',SCHECKS,sSel.checks);
+  const mk=(id,menu)=>{ const s=document.getElementById(id); s.innerHTML='';
+    menu.forEach(([v,label])=>{ const o=document.createElement('option'); o.value=v; o.textContent=label; s.appendChild(o); }); };
+  mk('wMon',MON_MENU); mk('wSat',SAT_MENU);
+  document.getElementById('wSat').value='salsa';
+  const el=document.getElementById('wSalsa'); el.innerHTML='';
+  [['TU','Tuesday'],['TH','Thursday']].forEach(([k,label])=>{
+    const b=document.createElement('div'); b.className='pill'; b.textContent=label+' 7–9';
+    if(wSalsaSel[k]) b.classList.add('on');
+    b.onclick=()=>{ wSalsaSel[k]=!wSalsaSel[k]; drawSundayForm(); };
+    el.appendChild(b);
+  });
+  if(!document.getElementById('wExtras').children.length) addExtraRow();
+}
+function addExtraRow(){
+  const box=document.getElementById('wExtras');
+  const row=document.createElement('div'); row.className='row'; row.style.marginTop='6px';
+  row.innerHTML=`<input placeholder="title" style="flex:2;min-width:100px">
+    <select style="width:auto"><option>MO</option><option>TU</option><option>WE</option><option>TH</option><option>FR</option><option>SA</option><option>SU</option></select>
+    <input placeholder="14:00" style="width:64px;flex:none">
+    <input type="number" placeholder="60" title="minutes" style="width:60px;flex:none">`;
+  box.appendChild(row);
+}
+function icsDate(d, hm){ const [h,m]=hm.split(':'); const x=new Date(d); x.setHours(+h,+m,0,0);
+  const p=n=>String(n).padStart(2,'0');
+  return `${x.getFullYear()}${p(x.getMonth()+1)}${p(x.getDate())}T${p(x.getHours())}${p(x.getMinutes())}00`; }
+function generateWeek(){
+  const wk=nextWeekDates(); const ev=[];
+  const monPick=MON_MENU.find(m=>m[0]===document.getElementById('wMon').value);
+  const satPick=SAT_MENU.find(m=>m[0]===document.getElementById('wSat').value);
+  [monPick,satPick].forEach(p=>{ if(p && p[2]) ev.push(p[2]); });
+  Object.entries(wSalsaSel).forEach(([k,on])=>{ if(on) ev.push({day:k,start:'19:00',min:120,loc:'232 Varet St, Brooklyn',t:'Salsa — Footwork + Partnerwork'}); });
+  [...document.getElementById('wExtras').children].forEach(row=>{
+    const [t,dsel,time,mins]=row.querySelectorAll('input,select');
+    if(t.value && time.value) ev.push({day:dsel.value,start:time.value,min:+(mins.value||60),loc:'',t:t.value});
+  });
+  if(!ev.length){ document.getElementById('wMsg').textContent='Nothing picked — an empty week is also a choice ✓'; return; }
+  let ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//BridgeQuarter//EN\r\n';
+  ev.forEach((e,i)=>{
+    const d=wk[e.day]; const end=new Date(d); const [h,m]=e.start.split(':');
+    end.setHours(+h,+m+e.min,0,0);
+    const p=n=>String(n).padStart(2,'0');
+    const endStr=`${end.getFullYear()}${p(end.getMonth()+1)}${p(end.getDate())}T${p(end.getHours())}${p(end.getMinutes())}00`;
+    ics+=`BEGIN:VEVENT\r\nUID:bq-${Date.now()}-${i}@bridgequarter\r\nDTSTART;TZID=America/New_York:${icsDate(d,e.start)}\r\nDTEND;TZID=America/New_York:${endStr}\r\nSUMMARY:${e.t}\r\n${e.loc?'LOCATION:'+e.loc+'\r\n':''}END:VEVENT\r\n`;
+  });
+  ics+='END:VCALENDAR\r\n';
+  const blob=new Blob([ics],{type:'text/calendar'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='bridge-week.ics'; a.click();
+  document.getElementById('wMsg').textContent=`✓ ${ev.length} event(s) generated — open the file to add to Google Calendar, then BOOK the classes.`;
 }
 async function saveSunday(){
-  const wk=document.getElementById('sDate').value||nextSunday();
+  const wkEnd=document.getElementById('sDate').value||nextSunday();
   const g=id=>document.getElementById(id).value;
-  await DB.saveSunday(wk,{apps:g('sApps'),touches:g('sTouches'),mocks:g('sMocks'),lifts:g('sLifts'),runs:g('sRuns'),
-    weight:g('sWeight'),good:g('sGood'),bad:g('sBad'),top3:g('sTop3'),checks:sSel.checks});
-  document.getElementById('sMsg').textContent='Saved ✓ — brick laid';
-  setTimeout(()=>document.getElementById('sMsg').textContent='',2500);
-  ['sApps','sTouches','sMocks','sLifts','sRuns','sGood','sBad','sTop3'].forEach(id=>document.getElementById(id).value='');
-  sSel={checks:{}}; drawSundayForm(); await refreshAll();
+  const draft={ mon:g('wMon'), sat:g('wSat'), salsa:{...wSalsaSel} };
+  await DB.saveSunday(wkEnd,{apps:g('sApps'),touches:g('sTouches'),mocks:g('sMocks'),lifts:g('sLifts'),
+    weight:(trendWeight()||'').toString().slice(0,5),good:g('sGood'),bad:g('sBad'),top3:g('sTop3'),checks:sSel.checks,draft});
+  document.getElementById('sMsg').textContent='Saved ✓ — brick laid. Now generate the week →';
+  setTimeout(()=>document.getElementById('sMsg').textContent='',3000);
+  ['sApps','sTouches','sMocks','sLifts','sGood','sBad','sTop3'].forEach(id=>document.getElementById(id).value='');
+  sSel={checks:{}}; await refreshAll();
 }
 function renderSundayLog(){
   const el=document.getElementById('sundayLog'); el.innerHTML='';
-  document.getElementById('revCount').textContent=`(${cacheSunday.length} of 17)`;
+  document.getElementById('revCount').textContent=`(${cacheSunday.length} of ${WEEKS})`;
   cacheSunday.forEach(r=>{
     const d=r.data;
-    const quota = (+d.apps>=10?'<span class="ok">apps ✓</span>':'<span class="miss">apps '+(d.apps||0)+'</span>')
+    const quota=(+d.apps>=10?'<span class="ok">apps ✓</span>':'<span class="miss">apps '+(d.apps||0)+'</span>')
       +' · '+(+d.touches>=5?'<span class="ok">touches ✓</span>':'<span class="miss">touches '+(d.touches||0)+'</span>');
     const div=document.createElement('div');
     div.style.cssText='padding:9px 0;border-bottom:1px dashed var(--sand)';
-    div.innerHTML=`<span class="d">wk ${r.week_ending}</span> · ${quota} · mocks ${d.mocks||0} · lifts ${d.lifts||0}/3 · runs ${d.runs||0}/2${d.weight?' · '+d.weight+' lb':''}
-      ${d.good?'<br><span style="color:var(--green)">＋ '+d.good+'</span>':''}${d.bad?'<br><span style="color:var(--grey)">－ '+d.bad+'</span>':''}${d.top3?'<br><span style="color:var(--grey)">next: '+d.top3+'</span>':''}`;
+    div.innerHTML=`<span class="d">wk ${r.week_ending}</span> · ${quota} · mocks ${d.mocks||0} · lifts ${d.lifts||0}/3${d.weight?' · '+d.weight+' lb':''}
+      ${d.good?'<br><span style="color:var(--green)">＋ '+d.good+'</span>':''}${d.bad?'<br><span style="color:var(--grey)">－ '+d.bad+'</span>':''}`;
     el.appendChild(div);
   });
-  if(!cacheSunday.length) el.innerHTML='<span style="color:var(--grey)">First review: Sunday Jul 12, 6:00pm.</span>';
+  if(!cacheSunday.length) el.innerHTML=`<span style="color:var(--grey)">First review of the restart: Sunday Jul 19, 6:00pm.</span>`;
 }
 
-/* ---------- photos tab ---------- */
+/* ---------- photos ---------- */
 async function uploadPic(){
   const f=document.getElementById('picFile').files[0];
   const msg=document.getElementById('picMsg');
-  if(!cloud){ msg.textContent='Photos need Supabase — see DEPLOY.md'; return; }
+  if(!cloud){ msg.textContent='Photos need the synced version.'; return; }
   if(!f){ msg.textContent='Pick a photo first'; return; }
   msg.textContent='Uploading…';
   const path=`${user.id}/${todayISO()}-${Date.now()}.${(f.name.split('.').pop()||'jpg')}`;
@@ -540,14 +617,13 @@ async function uploadPic(){
 }
 async function renderPics(){
   const grid=document.getElementById('picGrid'); grid.innerHTML='';
-  if(!cloud){ grid.innerHTML='<span style="color:var(--grey)">Connect Supabase to enable the private photo vault.</span>'; return; }
+  if(!cloud){ grid.innerHTML='<span style="color:var(--grey)">Photos need the synced version.</span>'; return; }
   const {data:files}=await sb.storage.from('progress-pics').list(user.id,{limit:200,sortBy:{column:'name',order:'desc'}});
-  if(!files||!files.length){ grid.innerHTML='<span style="color:var(--grey)">No pics yet. Baseline set: Jul 7.</span>'; return; }
+  if(!files||!files.length){ grid.innerHTML='<span style="color:var(--grey)">No pics yet. New baseline: today.</span>'; return; }
   for(const f of files){
     const {data:s}=await sb.storage.from('progress-pics').createSignedUrl(`${user.id}/${f.name}`,3600);
     const div=document.createElement('div'); div.className='pic';
-    const dateLabel=f.name.slice(0,10);
-    div.innerHTML=`<img src="${s.signedUrl}" loading="lazy"><div class="cap"><b>${dateLabel}</b></div>`;
+    div.innerHTML=`<img src="${s.signedUrl}" loading="lazy"><div class="cap"><b>${f.name.slice(0,10)}</b></div>`;
     const del=document.createElement('button'); del.textContent='delete';
     del.onclick=async()=>{ if(confirm('Delete this photo?')){ await sb.storage.from('progress-pics').remove([`${user.id}/${f.name}`]); renderPics(); } };
     div.querySelector('.cap').appendChild(del);
@@ -555,33 +631,74 @@ async function renderPics(){
   }
 }
 
-/* ---------- tangibles tab ---------- */
-async function addProof(){
-  const kind=document.getElementById('prKind').value;
-  const value=document.getElementById('prValue').value.trim();
-  if(!value){ document.getElementById('prMsg').textContent='Value needed'; return; }
-  await DB.addProof({kind,value,day:document.getElementById('prDate').value||todayISO(),note:document.getElementById('prNote').value||null});
-  document.getElementById('prMsg').textContent='Logged ✓';
-  setTimeout(()=>document.getElementById('prMsg').textContent='',2000);
-  document.getElementById('prValue').value=''; document.getElementById('prNote').value='';
+/* ---------- tangibles / audit ---------- */
+const qv = id => parseFloat(document.getElementById(id).value);
+async function logQuick(category, metric, value, unit, extra){
+  if(value===undefined||value===null||isNaN(value)){ return; }
+  await DB.addAudit({kind:`${category}|${metric}|${unit}`, value:String(value), day:todayISO(), note: extra?JSON.stringify(extra):null});
   await refreshAll();
 }
-function renderProof(){
-  document.getElementById('pStreak').textContent=calcStreak(cacheDaily);
-  document.getElementById('pCheckins').textContent=cacheDaily.length;
-  document.getElementById('pReviews').textContent=cacheSunday.length+'/17';
-  const lifts=cacheDaily.filter(r=>r.data.training&&r.data.training.lift).length;
-  document.getElementById('pLifts').textContent=lifts;
-  document.getElementById('pMocks').textContent=cacheProof.filter(p=>p.kind==='Mock completed').length;
-  document.getElementById('pPRs').textContent=cacheProof.filter(p=>p.kind.startsWith('PR reviewed')).length+'/8';
-  const el=document.getElementById('proofLog'); el.innerHTML='';
-  cacheProof.forEach(p=>{
+async function logRun(){
+  const mi=qv('qRd'); const t=document.getElementById('qRt').value.trim();
+  if(!mi||!t) return;
+  const parts=t.split(':').map(Number); const mins= parts.length===2 ? parts[0]+parts[1]/60 : parts[0];
+  await logQuick('run','run',+mins.toFixed(2),'min',{miles:mi, time:t});
+  document.getElementById('qRd').value=''; document.getElementById('qRt').value='';
+}
+async function logLift(){
+  const ex=document.getElementById('qLex').value, w=qv('qLw'), r=qv('qLr');
+  if(!w||!r) return;
+  await logQuick('lift',ex,w,'lb',{reps:r});
+  document.getElementById('qLw').value=''; document.getElementById('qLr').value='';
+}
+async function logCustom(){
+  const k=document.getElementById('qXk').value.trim(); if(!k) return;
+  const v=parseFloat(document.getElementById('qXv').value)||1;
+  await logQuick('custom',k,v,'');
+  document.getElementById('qXk').value=''; document.getElementById('qXv').value='';
+}
+function pace(a){ if(!a.extra.miles) return ''; const p=a.value/a.extra.miles; const m=Math.floor(p), s=Math.round((p-m)*60);
+  return `${m}:${String(s).padStart(2,'0')}/mi`; }
+function renderAudit(){
+  const A=cacheAudit.map(parseAudit);
+  // stats
+  const stats=[];
+  const w=trendWeight(); stats.push(['⚖️', w?w.toFixed(1):'—','lb trend','start 135 → goal 125']);
+  const runs=A.filter(a=>a.category==='run'); const totMi=runs.reduce((s,a)=>s+(a.extra.miles||0),0);
+  const best=runs.filter(a=>a.extra.miles>=3).sort((x,y)=>(x.value/x.extra.miles)-(y.value/y.extra.miles))[0];
+  stats.push(['🏃',runs.length,'runs logged',totMi.toFixed(1)+' mi total'+(best?' · best pace '+pace(best):'')]);
+  const lifts=A.filter(a=>a.category==='lift');
+  const liftDays=new Set(lifts.map(a=>a.day)).size;
+  const ht=lifts.filter(a=>a.metric==='Hip thrust').sort((x,y)=>y.value-x.value)[0];
+  const sq=lifts.filter(a=>a.metric==='Squat').sort((x,y)=>y.value-x.value)[0];
+  stats.push(['🏋️',liftDays,'lift days',(ht?'Hip thrust PR '+ht.value+' lb':'')+(sq?' · Squat PR '+sq.value+' lb':'')]);
+  const mocks=A.filter(a=>a.category==='career'&&a.metric==='Mock completed').length;
+  const prs=A.filter(a=>a.category==='career'&&a.metric==='PR reviewed by Ngozi').length;
+  stats.push(['💼',mocks+' / '+prs,'mocks / PRs','targets: 3+ mocks · 8+ PRs']);
+  stats.push(['🧱',calcStreak(cacheDaily),'day streak','limit held']);
+  stats.push(['✅',cacheDaily.length,'check-ins','of '+Math.max(1,Math.min(TOTAL,day(new Date()-START)+1))+' days']);
+  const box=document.getElementById('auditStats'); box.innerHTML='';
+  stats.forEach(([icon,big,label,sub])=>{ const d=document.createElement('div'); d.className='stat';
+    d.innerHTML=`<b>${icon} ${big}</b><span>${label}</span><i>${sub||''}</i>`; box.appendChild(d); });
+  // log
+  const el=document.getElementById('auditLog'); el.innerHTML='';
+  const maxByMetric={};
+  A.slice().reverse().forEach(a=>{ if(a.category==='lift'){ const k=a.metric;
+    if(!maxByMetric[k]||a.value>maxByMetric[k].value) maxByMetric[k]=a; } });
+  A.slice(0,60).forEach(a=>{
     const div=document.createElement('div');
-    div.style.cssText='padding:8px 0;border-bottom:1px dashed var(--sand)';
-    div.innerHTML=`<span class="d">${p.day.slice(5)}</span> · <b>${p.kind}</b> — ${p.value}${p.note?' <span style="color:var(--grey)">('+p.note+')</span>':''}`;
+    div.style.cssText='padding:7px 0;border-bottom:1px dashed var(--sand)';
+    let txt='';
+    if(a.category==='weight') txt=`⚖️ ${a.value} lb`;
+    else if(a.category==='run') txt=`🏃 ${a.extra.miles} mi in ${a.extra.time} (${pace(a)})`;
+    else if(a.category==='lift') txt=`🏋️ ${a.metric} — ${a.value} lb × ${a.extra.reps}` + (maxByMetric[a.metric]&&maxByMetric[a.metric].id===a.id?' <span class="prbadge">PR</span>':'');
+    else if(a.category==='measure') txt=`📏 ${a.metric}: ${a.value} in`;
+    else if(a.category==='career') txt=`💼 ${a.metric}`;
+    else txt=`✨ ${a.metric}${a.value&&a.value!==1?': '+a.value:''}`;
+    div.innerHTML=`<span class="d">${(a.day||'').slice(5)}</span> · ${txt}`;
     el.appendChild(div);
   });
-  if(!cacheProof.length) el.innerHTML='<span style="color:var(--grey)">The record starts empty. It won\'t stay that way.</span>';
+  if(!A.length) el.innerHTML='<span style="color:var(--grey)">The record starts empty. It won\'t stay that way.</span>';
 }
 
 /* ---------- tabs + refresh ---------- */
@@ -598,10 +715,9 @@ async function refreshAll(){
   cacheState = await DB.getState();
   cacheDaily = await DB.listDaily();
   cacheSunday = await DB.listSunday();
-  cacheProof = await DB.listProof();
-  renderDash(); renderDailyLog(); renderSundayLog(); renderProof();
+  cacheAudit = await DB.listAudit();
+  renderDash(); renderDailyLog(); renderSundayLog(); renderAudit();
   drawDailyForm(); drawSundayForm();
-  document.getElementById('prDate').value=todayISO();
 }
 boot();
 </script>
