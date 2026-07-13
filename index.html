@@ -186,7 +186,7 @@
 <!-- ================= DAILY ================= -->
 <section class="tab" id="tab-daily">
   <h2>Daily check-in</h2>
-  <p class="lede">Sixty seconds: the habits row, nothing else. Numbers go in Tangibles; this is just "did today happen the way I intend to live."</p>
+  <p class="lede">Sixty seconds, six questions — one per thing you actually want: worked the hunt (the offer) · moved + protein (125, built not shrunk) · within the limit (the streak) · 10 minutes for you + no spiraling (the regulation record). Tap what's true, save.</p>
   <div class="cols">
     <div class="panel">
       <label class="f">Date</label>
@@ -458,7 +458,14 @@ function renderDash(){
 }
 
 /* ---------- daily ---------- */
-const HABITS=[['reg','10-min regulation'],['protein','120g protein'],['phone','phone rule held'],['container','container closed on time'],['study','study block done'],['limit','WITHIN THE LIMIT']];
+const HABITS=[
+  ['career','💼 Worked the job hunt'],          // Goal 1 — applications, study, or interviews happened today
+  ['move','🍑 Moved my body'],                   // Goal 2 — lift, run, or dance
+  ['protein','🥩 Ate enough protein'],           // Goal 2 — ~120g, fuels the build
+  ['limit','🥂 Stayed within my limit'],         // Goal 3 — the streak lives here
+  ['me10','🧘 Took 10 minutes for me'],          // journaling, prayer, poetry, or a quiet walk with Blue
+  ['nospiral','📵 No late-night job spiraling'], // no LinkedIn refreshing, no recruiter-tone decoding after dinner
+];
 let dSel={habits:{limit:true}};
 function pillbar(elId, items, sel){
   const el=document.getElementById(elId); el.innerHTML='';
@@ -476,7 +483,7 @@ function drawDailyForm(){
 async function saveDaily(){
   const d = document.getElementById('dDate').value || todayISO();
   const habits = {...dSel.habits}; habits.limit = !!habits.limit;
-  if(!habits.limit && !confirm('Saving with WITHIN THE LIMIT unchecked = a slip is logged and the streak restarts. Honesty is the practice. Save?')) return;
+  if(!habits.limit && !confirm('Saving without "Stayed within my limit" = a slip is logged and the streak restarts. Honesty is the practice. Save?')) return;
   await DB.saveDaily(d, { habits, note: document.getElementById('dNote').value || '' });
   document.getElementById('dMsg').textContent='Saved ✓';
   setTimeout(()=>document.getElementById('dMsg').textContent='',2000);
