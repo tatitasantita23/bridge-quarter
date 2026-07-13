@@ -133,43 +133,13 @@
 
 <!-- ================= DASHBOARD ================= -->
 <section class="tab active" id="tab-dash">
-  <h2>The Four</h2>
-  <p class="lede">Day 1 was July 13. The finish line didn't move: offers in September, October is buffer.</p>
-  <div class="goals">
-    <div class="goal">
-      <div class="num">01 · CAREER</div>
-      <h3>A signed job offer</h3>
-      <div class="big" id="offerStage">Applying</div>
-      <select id="offerSelect" onchange="setOffer(this.value)">
-        <option>Applying</option><option>Screens live</option><option>Tech rounds</option>
-        <option>Onsites</option><option>Offer in hand</option><option>OFFER SIGNED 🎉</option>
-      </select>
-      <div class="bar"><i id="offerBar" style="width:8%"></i></div>
-      <small>Container 9:30–11:30 · study 2h · quotas in the tracker. Four real hours beat five resented ones.</small>
-    </div>
-    <div class="goal">
-      <div class="num">02 · BODY</div>
-      <h3>Reach 125</h3>
-      <div class="big"><span id="curWeight">—</span><small> lbs · 7-entry trend</small></div>
-      <div class="bar"><i id="weightBar" style="width:0%"></i></div>
-      <div class="weights" id="wChart"></div>
-      <small>Weight logs live in Tangibles now. 3 midday lifts + near-daily easy runs. Trend dropping &gt;1.25 lb/wk = eat more.</small>
-    </div>
-    <div class="goal">
-      <div class="num">03 · REGULATION</div>
-      <h3>Never past the limit</h3>
-      <div class="big"><span id="streakDays">–</span><small> days</small></div>
-      <div class="bar"><i id="streakBar" style="width:0%"></i></div>
-      <small>"Within the limit" is a daily habit checkbox now — unchecking it on a saved day restarts the streak. Honesty is the practice.</small>
-    </div>
-    <div class="goal">
-      <div class="num">04 · VEUWE</div>
-      <h3>VEUWE is being pitched</h3>
-      <div class="big"><span id="pitchPct">0%</span><small> pitch-ready</small></div>
-      <div class="bar"><i id="pitchBar" style="width:0%"></i></div>
-      <div id="pitchList"></div>
-      <small>Deck prep from Oct 1; outreach the week the offer signs.</small>
-    </div>
+  <h2>Why this quarter exists</h2>
+  <div class="panel" style="font-family:'Fraunces',serif;font-size:clamp(16px,2.4vw,21px);line-height:2;border-top:5px solid var(--terra)">
+    ✍️ <b>A signed job offer</b> — September, negotiated from options, never from panic.<br>
+    🍑 <b>125 by Halloween</b> — built in the gym, never starved.<br>
+    🥂 <b>Every night within my limit</b> — the whole quarter, not one exception.<br>
+    🚀 <b>VEUWE being pitched</b> — employed first, then the room hears about it.<br>
+    <span style="color:var(--terra);font-style:italic">Same Tatiana, less self-abandonment. Brick by brick.</span>
   </div>
 
   <section style="margin-top:36px">
@@ -198,7 +168,7 @@
 <!-- ================= DAILY ================= -->
 <section class="tab" id="tab-daily">
   <h2>Daily check-in</h2>
-  <p class="lede">Sixty seconds, six questions — one per thing you actually want: worked the hunt (the offer) · moved + protein (125, built not shrunk) · within the limit (the streak) · 10 minutes for you + no spiraling (the regulation record). Tap what's true, save.</p>
+  <p class="lede">Sixty seconds — one tap per thing you actually want: worked the hunt (the offer) · moved + protein (125, built not shrunk) · within the limit (the streak) · 10 minutes for you + no spiraling (the regulation record) · Invisalign in. Tap what's true, save.</p>
   <div class="cols">
     <div class="panel">
       <label class="f">Date</label>
@@ -230,6 +200,11 @@
         <div><label class="f">Warm touches (5)</label><input type="number" id="sTouches"></div>
         <div><label class="f">Mocks / reps</label><input type="number" id="sMocks"></div>
         <div><label class="f">Lifts (of 3)</label><input type="number" id="sLifts"></div>
+        <div><label class="f">Offer stage right now</label>
+          <select id="offerSelect" onchange="setOffer(this.value)">
+            <option>Applying</option><option>Screens live</option><option>Tech rounds</option>
+            <option>Onsites</option><option>Offer in hand</option><option>OFFER SIGNED 🎉</option>
+          </select></div>
       </div>
       <label class="f">One moment I regulated well</label><textarea id="sGood"></textarea>
       <label class="f">One moment I didn't (data, not judgment)</label><textarea id="sBad"></textarea>
@@ -310,6 +285,10 @@
           <select id="qCk"><option>Mock completed</option><option>PR reviewed by Ngozi</option><option>Screen done</option><option>Onsite done</option></select>
           <button onclick="logQuick('career',document.getElementById('qCk').value,1,'rep')">Log</button>
         </div>
+      </div>
+      <div class="quick">
+        <h4>🚀 VEUWE pitch checklist</h4>
+        <div id="pitchList"></div>
       </div>
       <div class="quick">
         <h4>✨ Anything else</h4>
@@ -435,37 +414,20 @@ const pitchItems = [
   ['meeting','First pitch meeting — being pitched ✓'],
 ];
 function renderDash(){
-  const offer = cacheState.offer || 'Applying';
-  document.getElementById('offerStage').textContent = offer;
-  document.getElementById('offerSelect').value = offer;
-  document.getElementById('offerBar').style.width = ((stages.indexOf(offer)+1)/stages.length*100)+'%';
-  const t = trendWeight();
-  document.getElementById('curWeight').textContent = t ? t.toFixed(1) : '—';
-  document.getElementById('weightBar').style.width = t ? Math.min(100,Math.max(0,(135-t)/10*100))+'%' : '0%';
-  const chart = document.getElementById('wChart'); chart.innerHTML='';
-  const recent = audits('weight').slice(0,21).reverse();
-  if(recent.length){
-    const vals = recent.map(a=>a.value);
-    const min = Math.min(...vals,124), max = Math.max(...vals,136);
-    recent.forEach((a,i)=>{ const d=document.createElement('div');
-      d.style.height=(8+(a.value-min)/(max-min||1)*44)+'px'; d.title=`${a.day}: ${a.value}`;
-      if(i===recent.length-1)d.className='latest'; chart.appendChild(d); });
+  const sel=document.getElementById('offerSelect');
+  if(sel) sel.value = cacheState.offer || 'Applying';
+  const box = document.getElementById('pitchList');
+  if(box){
+    box.innerHTML='';
+    const p = cacheState.pitch || {};
+    pitchItems.forEach(([k,label])=>{
+      const l=document.createElement('label'); l.className='check';
+      const c=document.createElement('input'); c.type='checkbox'; c.checked=!!p[k];
+      c.onchange=async()=>{ p[k]=c.checked; cacheState.pitch=p; await DB.saveState(cacheState); renderDash(); };
+      const s=document.createElement('span'); s.textContent=label; if(c.checked)s.className='done';
+      l.append(c,s); box.appendChild(l);
+    });
   }
-  const streak = calcStreak(cacheDaily);
-  document.getElementById('streakDays').textContent = streak;
-  document.getElementById('streakBar').style.width = Math.min(100,streak/TOTAL*100)+'%';
-  const box = document.getElementById('pitchList'); box.innerHTML=''; let done=0;
-  const p = cacheState.pitch || {};
-  pitchItems.forEach(([k,label])=>{
-    const l=document.createElement('label'); l.className='check';
-    const c=document.createElement('input'); c.type='checkbox'; c.checked=!!p[k]; if(c.checked)done++;
-    c.onchange=async()=>{ p[k]=c.checked; cacheState.pitch=p; await DB.saveState(cacheState); renderDash(); };
-    const s=document.createElement('span'); s.textContent=label; if(c.checked)s.className='done';
-    l.append(c,s); box.appendChild(l);
-  });
-  const pct = Math.round(done/pitchItems.length*100);
-  document.getElementById('pitchPct').textContent=pct+'%';
-  document.getElementById('pitchBar').style.width=pct+'%';
   renderHeader(cacheDaily);
 }
 
@@ -477,6 +439,7 @@ const HABITS=[
   ['limit','🥂 Stayed within my limit'],         // Goal 3 — the streak lives here
   ['me10','🧘 Took 10 minutes for me'],          // journaling, prayer, poetry, or a quiet walk with Blue
   ['nospiral','📵 No late-night job spiraling'], // no LinkedIn refreshing, no recruiter-tone decoding after dinner
+  ['invis','🦷 Wore my Invisalign'],             // 20+ hrs — the January smile is under construction too
 ];
 let dSel={habits:{limit:true}};
 function pillbar(elId, items, sel){
@@ -512,7 +475,7 @@ function renderDailyLog(){
     const slip = h.limit===false; // only an explicit saved slip counts — unanswered ≠ failed
     const div=document.createElement('div');
     div.style.cssText='padding:8px 0;border-bottom:1px dashed var(--sand)';
-    div.innerHTML=`<span class="d">${r.day.slice(5)}</span> · <b>${done.length}/6</b>&nbsp; ${icons||'<span style="color:var(--grey)">nothing logged</span>'}${slip?' <span class="miss">SLIP</span>':''}${r.data.note?'<br><span style="color:var(--grey)">'+r.data.note+'</span>':''}`;
+    div.innerHTML=`<span class="d">${r.day.slice(5)}</span> · <b>${done.length}/${HABITS.length}</b>&nbsp; ${icons||'<span style="color:var(--grey)">nothing logged</span>'}${slip?' <span class="miss">SLIP</span>':''}${r.data.note?'<br><span style="color:var(--grey)">'+r.data.note+'</span>':''}`;
     el.appendChild(div);
   });
   if(!cacheDaily.length) el.innerHTML='<span style="color:var(--grey)">Day 1 is today. Sixty seconds.</span>';
