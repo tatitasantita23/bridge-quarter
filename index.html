@@ -209,8 +209,6 @@
       <label class="f">One moment I regulated well</label><textarea id="sGood"></textarea>
       <label class="f">One moment I didn't (data, not judgment)</label><textarea id="sBad"></textarea>
       <label class="f">Top 3 for next week</label><textarea id="sTop3"></textarea>
-      <label class="f">Standing checks</label>
-      <div class="pillrow" id="sChecks"></div>
       <div class="row" style="margin-top:12px"><button onclick="saveSunday()">Save review</button><div class="msg" id="sMsg"></div></div>
       <h3 style="color:var(--terra-dark);margin:18px 0 8px">Past reviews <span id="revCount" style="font-size:13px;color:var(--grey)"></span></h3>
       <div id="sundayLog" class="day-log"></div>
@@ -460,8 +458,6 @@ function renderDailyLog(){
 }
 
 /* ---------- sunday review + week generator ---------- */
-const SCHECKS=[['september','September framing said aloud'],['zero','Sunday stayed zero'],['booked','next week\'s classes BOOKED'],['followups','follow-ups queued']];
-let sSel={checks:{}};
 function nextSunday(){ const d=new Date(); d.setDate(d.getDate()+(7-d.getDay())%7); return d.toISOString().slice(0,10); }
 function nextWeekDates(){ // Mon..Sun after the upcoming Sunday-of-review (i.e., the week being planned)
   const now=new Date(); const dow=now.getDay(); // 0=Sun
@@ -480,7 +476,6 @@ const KNOWN=[
 ];
 function drawSundayForm(){
   document.getElementById('sDate').value = nextSunday();
-  pillbar('sChecks',SCHECKS,sSel.checks);
   const ki=document.getElementById('wKey');
   if(ki && localStorage.getItem('bq.claudeKey')) ki.placeholder='saved ✓ — paste to replace';
 }
@@ -647,11 +642,11 @@ async function saveSunday(){
   const g=id=>document.getElementById(id).value;
   const draft={ prompt:g('wPrompt'), plan:readPlan() };
   await DB.saveSunday(wkEnd,{apps:g('sApps'),touches:g('sTouches'),mocks:g('sMocks'),lifts:g('sLifts'),
-    weight:(trendWeight()||'').toString().slice(0,5),good:g('sGood'),bad:g('sBad'),top3:g('sTop3'),checks:sSel.checks,draft});
+    weight:(trendWeight()||'').toString().slice(0,5),good:g('sGood'),bad:g('sBad'),top3:g('sTop3'),draft});
   document.getElementById('sMsg').textContent='Saved ✓ — brick laid. Now generate the week →';
   setTimeout(()=>document.getElementById('sMsg').textContent='',3000);
   ['sApps','sTouches','sMocks','sLifts','sGood','sBad','sTop3'].forEach(id=>document.getElementById(id).value='');
-  sSel={checks:{}}; await refreshAll();
+  await refreshAll();
 }
 function renderSundayLog(){
   const el=document.getElementById('sundayLog'); el.innerHTML='';
