@@ -245,6 +245,14 @@
       <input type="file" id="picFile" accept="image/*" capture="environment" style="flex:1">
       <button onclick="uploadPic()">Upload</button>
     </div>
+    <label class="f" style="margin-top:12px">Measurements (inches) — logged to Tangibles with the set</label>
+    <div class="row">
+      <input type="number" step="0.1" id="pmWaist" placeholder="waist">
+      <input type="number" step="0.1" id="pmHips" placeholder="hips">
+      <input type="number" step="0.1" id="pmThigh" placeholder="thigh">
+      <input type="number" step="0.1" id="pmArm" placeholder="arm">
+      <button class="ghost" onclick="savePicMeasurements()">Save only</button>
+    </div>
     <div class="msg" id="picMsg"></div>
   </div>
   <div class="grid-pics" id="picGrid"></div>
@@ -253,7 +261,7 @@
 <!-- ================= TANGIBLES / AUDIT ================= -->
 <section class="tab" id="tab-audit">
   <h2>Tangibles — the audit log</h2>
-  <p class="lede">Everything recordable lands here: weight, lift sets, run times, measurements, career reps. If it can be measured, it gets a row — this is what "on track" looks like in numbers.</p>
+  <p class="lede">Everything recordable lands here: weight, lift sets, run times, measurements. If it can be measured, it gets a row — this is what "on track" looks like in numbers.</p>
   <div class="stats" id="auditStats"></div>
 
   <div class="cols">
@@ -278,13 +286,6 @@
         <div class="row">
           <select id="qMk"><option>Waist</option><option>Hips</option><option>Thigh</option><option>Arm</option></select>
           <input type="number" step="0.1" id="qMv" placeholder="inches"><button onclick="logQuick('measure',document.getElementById('qMk').value,qv('qMv'),'in')">Log</button>
-        </div>
-      </div>
-      <div class="quick">
-        <h4>💼 Career rep</h4>
-        <div class="row">
-          <select id="qCk"><option>Mock completed</option><option>PR reviewed by Ngozi</option><option>Screen done</option><option>Onsite done</option></select>
-          <button onclick="logQuick('career',document.getElementById('qCk').value,1,'rep')">Log</button>
         </div>
       </div>
       <div class="quick">
@@ -673,9 +674,25 @@ async function uploadPic(){
   msg.textContent='Uploading…';
   const path=`${user.id}/${todayISO()}-${Date.now()}.${(f.name.split('.').pop()||'jpg')}`;
   const {error}=await sb.storage.from('progress-pics').upload(path,f,{contentType:f.type});
-  msg.textContent=error?error.message:'Uploaded ✓';
+  if(error){ msg.textContent=error.message; return; }
+  const n=await saveMeasureFields();
+  msg.textContent='Uploaded ✓'+(n?` · ${n} measurement(s) logged`:'');
   document.getElementById('picFile').value='';
   await renderPics();
+}
+const PIC_MEASURES=[['pmWaist','Waist'],['pmHips','Hips'],['pmThigh','Thigh'],['pmArm','Arm']];
+async function saveMeasureFields(){
+  let n=0;
+  for(const [id,metric] of PIC_MEASURES){
+    const el=document.getElementById(id); const v=parseFloat(el.value);
+    if(!isNaN(v)&&v>0){ await DB.addAudit({kind:`measure|${metric}|in`, value:String(v), day:todayISO(), note:null}); el.value=''; n++; }
+  }
+  if(n) await refreshAll();
+  return n;
+}
+async function savePicMeasurements(){
+  const n=await saveMeasureFields();
+  document.getElementById('picMsg').textContent=n?`✓ ${n} measurement(s) logged to Tangibles`:'Type at least one measurement first';
 }
 async function renderPics(){
   const grid=document.getElementById('picGrid'); grid.innerHTML='';
@@ -734,9 +751,6 @@ function renderAudit(){
   const ht=lifts.filter(a=>a.metric==='Hip thrust').sort((x,y)=>y.value-x.value)[0];
   const sq=lifts.filter(a=>a.metric==='Squat').sort((x,y)=>y.value-x.value)[0];
   stats.push(['🏋️',liftDays,'lift days',(ht?'Hip thrust PR '+ht.value+' lb':'')+(sq?' · Squat PR '+sq.value+' lb':'')]);
-  const mocks=A.filter(a=>a.category==='career'&&a.metric==='Mock completed').length;
-  const prs=A.filter(a=>a.category==='career'&&a.metric==='PR reviewed by Ngozi').length;
-  stats.push(['💼',mocks+' / '+prs,'mocks / PRs','targets: 3+ mocks · 8+ PRs']);
   stats.push(['🧱',calcStreak(cacheDaily),'day streak','limit held']);
   stats.push(['✅',cacheDaily.length,'check-ins','of '+Math.max(1,Math.min(TOTAL,day(new Date()-START)+1))+' days']);
   const box=document.getElementById('auditStats'); box.innerHTML='';
